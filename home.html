@@ -8,7 +8,7 @@ body{font-family:system-ui,Arial,sans-serif;min-height:100vh;display:flex;flex-d
 h1{font-size:clamp(32px,6vw,56px);line-height:1.05;letter-spacing:-.03em;font-weight:900;text-align:center;margin-bottom:10px}
 h1 span{background:linear-gradient(135deg,#6c5ce7,#ff6b6b,#ffe66d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .sub{font-size:17px;opacity:.6;text-align:center;max-width:480px;margin-bottom:32px;line-height:1.5}
-.quiz-window{width:100%;max-width:520px;background:linear-gradient(135deg,rgba(108,92,231,.92),rgba(255,107,107,.88));border-radius:28px;padding:28px;border:1px solid rgba(255,255,255,.5);box-shadow:0 20px 60px rgba(0,0,0,.15);cursor:pointer;transition:all .45s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+.quiz-window{width:100%;max-width:560px;background:linear-gradient(135deg,rgba(108,92,231,.92),rgba(255,107,107,.88));border-radius:28px;padding:28px;border:1px solid rgba(255,255,255,.5);box-shadow:0 20px 60px rgba(0,0,0,.15);cursor:pointer;transition:all .45s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
 .quiz-window:hover{transform:translateY(-4px) scale(1.01)}
 .q-icon{width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:14px}
 .quiz-window h3{font-size:24px;font-weight:800;margin-bottom:6px;color:#fff}
@@ -17,32 +17,35 @@ h1 span{background:linear-gradient(135deg,#6c5ce7,#ff6b6b,#ffe66d);-webkit-backg
 .hint .dot{width:6px;height:6px;background:#fff;border-radius:50%;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .second-layer{max-height:0;opacity:0;overflow:hidden;transition:all .5s cubic-bezier(.34,1.56,.64,1);margin-top:0}
-.quiz-window.expanded .second-layer{max-height:400px;opacity:1;margin-top:20px}
+.quiz-window.expanded .second-layer{max-height:600px;opacity:1;margin-top:20px}
 .divider{height:1px;background:rgba(255,255,255,.3);margin:16px 0}
-.quiz-title{padding:14px 18px;border-radius:14px;background:rgba(255,255,255,.92);color:#1a1a1a;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:15px;cursor:pointer;transform:translateY(10px);opacity:0;transition:all .4s ease;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.quiz-title{padding:14px 18px;border-radius:14px;background:rgba(255,255,255,.92);color:#1a1a1a;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;cursor:pointer;transform:translateY(10px);opacity:0;transition:all .4s ease;box-shadow:0 4px 20px rgba(0,0,0,.1)}
 .quiz-window.expanded .quiz-title{transform:translateY(0);opacity:1}
-.quiz-title:nth-child(2){transition-delay:.1s}
-.quiz-title:nth-child(3){transition-delay:.2s}
+.quiz-title:nth-child(2){transition-delay:.08s}
+.quiz-title:nth-child(3){transition-delay:.16s}
+.quiz-title:nth-child(4){transition-delay:.24s}
 .quiz-title:hover{background:#fff;transform:translateY(-2px) scale(1.02)}
 .quiz-title.hidden-quiz{background:linear-gradient(135deg,#ffe66d,#ff9f1c);color:#1a1a1a}
+.quiz-title.quiz4{background:linear-gradient(135deg,#4ecdc4,#44a08d);color:#fff}
 </style></head><body>
 <div class="bg-mesh"></div><div class="bg-blur"></div>
 <a href="index.html" class="floating-home">🏠</a>
 <h1>Welcome to <span>drawdrawdraw2025</span></h1>
-<p class="sub">Tap quiz window → reveal → tap title to open</p>
+<p class="sub">Tap quiz window → reveal 4 quizzes → tap title to open</p>
 <div class="quiz-window" id="quizWindow">
 <div class="q-icon">📝</div>
 <h3>MPSC Quiz Hub</h3>
-<p>180 + 90 Questions • 3 Sets</p>
-<div class="hint"><span class="dot"></span> Click to reveal - 2 steps</div>
+<p>270 + 90 Questions • 4 Sets • 2-step open</p>
+<div class="hint"><span class="dot"></span> Click to reveal</div>
 <div class="second-layer">
 <div class="divider"></div>
 <div class="quiz-title" onclick="event.stopPropagation(); location.href='index.html'"><span>📝 Set A+B - 180 Qs</span><span>→</span></div>
 <div class="quiz-title hidden-quiz" onclick="event.stopPropagation(); location.href='quiz2.html'"><span>📚 Set C - 90 New Qs</span><span>→</span></div>
+<div class="quiz-title quiz4" onclick="event.stopPropagation(); location.href='quiz3.html'"><span>🚀 Set D - 90 Qs - 4th Quiz</span><span>→</span></div>
 </div>
 </div>
 <script>
 const win=document.getElementById('quizWindow');let exp=false;
-win.addEventListener('click',()=>{if(!exp){win.classList.add('expanded');exp=true;win.querySelector('.hint').innerHTML='👇 Tap title to open';}});
+win.addEventListener('click',()=>{if(!exp){win.classList.add('expanded');exp=true;win.querySelector('.hint').innerHTML='👇 Tap title to open quiz';}});
 </script>
 </body></html>
