@@ -1,1 +1,139 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Test</title></head><body><h1>Hello World v15</h1><p>Test if Pages builds</p></body></html>
+<!DOCTYPE html>
+<html lang='mr'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>तलाठी MPSC 2026 क्विज</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,'Noto Sans Devanagari',Arial,sans-serif;background:#f6f7fb;color:#1a1a1a;line-height:1.6}
+header{background:linear-gradient(135deg,#1a237e,#283593);color:#fff;padding:18px 16px;position:sticky;top:0;z-index:10}
+header h1{font-size:18px;margin-bottom:6px}
+header p{font-size:13px;opacity:.9}
+.set-tabs{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.set-tab{padding:8px 16px;border-radius:20px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:14px}
+.set-tab.active{background:#fff;color:#1a237e}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.filter-btn{white-space:nowrap;padding:8px 14px;border-radius:20px;border:1px solid #c5cae9;background:#eef0ff;font-size:13px;cursor:pointer;font-weight:600}
+.filter-btn.active{background:#1a237e;color:#fff;border-color:#1a237e}
+.container{max-width:860px;margin:0 auto;padding:16px 12px 80px}
+.qcard{background:#fff;border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:5px solid #3949ab}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.badge{font-size:11px;padding:3px 10px;border-radius:12px;background:#e8eaf6;color:#1a237e;font-weight:700}
+.badge.type{background:#fff3e0;color:#e65100}
+.badge.diff{background:#fce4ec;color:#b71c1c}
+.qtext{font-size:15px;margin-bottom:8px}
+.qtext .en{color:#444;font-size:13.5px;margin-top:6px;display:block}
+.opt{display:flex;gap:10px;padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;margin-bottom:8px;cursor:pointer;font-size:14px;background:#fafafa}
+.opt.selected{border-color:#1a237e;background:#e8eaf6}
+.opt-letter{font-weight:800;color:#1a237e;min-width:22px}
+.show-ans{background:#2e7d32;color:#fff;border:none;padding:10px 18px;border-radius:8px;font-weight:700;cursor:pointer;font-size:14px;margin-top:6px}
+.ansbox{display:none;margin-top:12px;padding:12px;border-radius:8px;background:#e8f5e9;border:1px solid #a5d6a7}
+.ansbox.visible{display:block}
+.ansbox .correct{font-weight:800;color:#1b5e20;margin-bottom:6px}
+.ansbox .expl{font-size:14px}
+.ansbox .evi{font-size:12px;color:#666;margin-top:8px;font-style:italic}
+.progress{text-align:center;font-size:13px;color:#555;margin:10px 0}
+.floating-home{position:fixed;top:16px;left:16px;z-index:9999;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.72);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(255,255,255,0.6);border-radius:50%;font-size:24px;text-decoration:none;box-shadow:0 8px 32px rgba(0,0,0,0.12);transition:all .35s cubic-bezier(0.34,1.56,0.64,1);}
+.floating-home:hover{background:rgba(255,255,255,0.9);transform:translateY(-2px) scale(1.08);}
+</style>
+</head>
+<body>
+<a href="home.html" class="floating-home" title="Modern Home">🏠</a>
+<header>
+<h1>📝 तलाठी MPSC पूर्व परीक्षा 2026 – इंटरॅक्टिव्ह क्विज</h1>
+<p>विभाग 3 ते 8 • प्रत्येकी 15 प्रश्न • एकूण 90 प्रश्न • कठीणता 5/5 • उत्तर डीफॉल्ट लपलेले • v14 split JSON + 🏠</p>
+<div class='set-tabs'>
+<button class='set-tab active' data-set='A'>संच A (90 प्रश्न)</button>
+<button class='set-tab' data-set='B'>संच B (90 प्रश्न) – भरपाई संच</button>
+</div>
+</header>
+<div class='filters' id='filters'></div>
+<div class='container'>
+<div class='progress' id='progress'>लोड होत आहे...</div>
+<div id='quiz'></div>
+</div>
+<script>
+var QUESTIONS_A = [];
+var QUESTIONS_B = [];
+var currentSet='A';
+var currentFilter='all';
+var sectionNames={3:"3. चालू घडामोडी",4:"4. इतिहास",5:"5. भूगोल",6:"6. राज्यशास्त्र",7:"7. अर्थशास्त्र",8:"8. सामान्य विज्ञान"};
+var filtersEl=document.getElementById('filters');
+var quizEl=document.getElementById('quiz');
+var progressEl=document.getElementById('progress');
+function getQuestions(){return currentSet==='A'?QUESTIONS_A:QUESTIONS_B;}
+function renderFilters(){
+ filtersEl.innerHTML='';
+ var allBtn=document.createElement('button');allBtn.className='filter-btn'+(currentFilter==='all'?' active':'');allBtn.textContent='सर्व (90)';
+ allBtn.onclick=function(){currentFilter='all';renderFilters();renderQuiz();};filtersEl.appendChild(allBtn);
+ [3,4,5,6,7,8].forEach(function(s){var b=document.createElement('button');b.className='filter-btn'+(currentFilter===s?' active':'');b.textContent=sectionNames[s]+' (15)';b.onclick=function(){currentFilter=s;renderFilters();renderQuiz();};filtersEl.appendChild(b);});
+}
+function renderQuiz(){
+ var qs=getQuestions().filter(function(q){return currentFilter==='all'||q.section===currentFilter;});
+ progressEl.textContent='संच '+currentSet+' • दाखवलेले प्रश्न: '+qs.length;
+ quizEl.innerHTML='';
+ qs.forEach(function(q,idx){
+  var card=document.createElement('div');card.className='qcard';
+  var letters=['A','B','C','D'];
+  var optsHtml=q.options.map(function(op,i){return '<div class="opt"><span class="opt-letter">'+letters[i]+'.</span><span>'+op.replace(/\n/g,'<br>')+'</span></div>';}).join('');
+  card.innerHTML='<div class="qmeta"><span class="badge">'+sectionNames[q.section]+'</span><span class="badge type">'+(q.qtype||'')+'</span><span class="badge diff">कठीणता 5/5</span><span class="badge" style="background:#f3e5f5;color:#6a1b9a">'+(q.subtopic||'')+'</span></div><div class="qtext"><b>प्रश्न '+(idx+1)+'.</b> '+q.q_marathi.replace(/\n/g,'<br>')+'<span class="en">'+q.q_english.replace(/\n/g,'<br>')+'</span></div><div class="opts">'+optsHtml+'</div><button class="show-ans">उत्तर पहा</button><div class="ansbox"><div class="correct">✅ योग्य उत्तर: '+letters[q.correct_index]+' – '+q.options[q.correct_index]+'</div><div class="expl"><b>स्पष्टीकरण:</b> '+q.explanation_marathi.replace(/\n/g,'<br>')+'</div><div class="evi">पुरावा: '+(q.evidence||'')+'</div></div>';
+  quizEl.appendChild(card);
+  var btn=card.querySelector('.show-ans');var box=card.querySelector('.ansbox');
+  btn.onclick=function(){box.classList.toggle('visible');btn.textContent=box.classList.contains('visible')?'उत्तर लपवा':'उत्तर पहा';};
+  var opts=card.querySelectorAll('.opt');
+  for(var j=0;j<opts.length;j++){
+    opts[j].onclick=(function(cardCopy){
+      return function(){
+        var all=cardCopy.querySelectorAll('.opt');
+        for(var k=0;k<all.length;k++) all[k].classList.remove('selected');
+        this.classList.add('selected');
+      };
+    })(card);
+  }
+ });
+}
+function loadQuestions(){
+  progressEl.textContent='प्रश्न लोड होत आहेत...';
+  var xhrA=new XMLHttpRequest();
+  xhrA.open('GET','questions_a.json?v='+Date.now(),true);
+  xhrA.onreadystatechange=function(){
+    if(xhrA.readyState===4 && xhrA.status===200){
+      try{ QUESTIONS_A=JSON.parse(xhrA.responseText); }catch(e){}
+      checkBothLoaded();
+    }
+  };
+  xhrA.send();
+  var xhrB=new XMLHttpRequest();
+  xhrB.open('GET','questions_b.json?v='+Date.now(),true);
+  xhrB.onreadystatechange=function(){
+    if(xhrB.readyState===4 && xhrB.status===200){
+      try{ QUESTIONS_B=JSON.parse(xhrB.responseText); }catch(e){}
+      checkBothLoaded();
+    }
+  };
+  xhrB.send();
+}
+var loadedA=false, loadedB=false;
+function checkBothLoaded(){
+  if(QUESTIONS_A.length>0) loadedA=true;
+  if(QUESTIONS_B.length>0) loadedB=true;
+  if(loadedA && loadedB){ renderFilters(); renderQuiz(); }
+  else if(loadedA || loadedB){ renderFilters(); renderQuiz(); }
+}
+var setTabs=document.querySelectorAll('.set-tab');
+for(var t=0;t<setTabs.length;t++){
+  setTabs[t].onclick=(function(tab){
+    return function(){
+      var all=document.querySelectorAll('.set-tab');
+      for(var x=0;x<all.length;x++) all[x].classList.remove('active');
+      tab.classList.add('active');
+      currentSet=tab.getAttribute('data-set');
+      renderQuiz();
+    };
+  })(setTabs[t]);
+}
+loadQuestions();
+</script>
+</body>
+</html>
