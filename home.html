@@ -8,7 +8,6 @@ body{font-family:system-ui,Arial,sans-serif;min-height:100vh;display:flex;flex-d
 h1{font-size:clamp(32px,6vw,56px);line-height:1.05;letter-spacing:-.03em;font-weight:900;text-align:center;margin-bottom:10px}
 h1 span{background:linear-gradient(135deg,#6c5ce7,#ff6b6b,#ffe66d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .sub{font-size:17px;opacity:.6;text-align:center;max-width:480px;margin-bottom:32px;line-height:1.5}
-
 .quiz-window{width:100%;max-width:520px;background:linear-gradient(135deg,rgba(108,92,231,.92),rgba(255,107,107,.88));border-radius:28px;padding:28px;border:1px solid rgba(255,255,255,.5);box-shadow:0 20px 60px rgba(0,0,0,.15);cursor:pointer;transition:all .45s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
 .quiz-window:hover{transform:translateY(-4px) scale(1.01)}
 .q-icon{width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:14px}
@@ -17,66 +16,33 @@ h1 span{background:linear-gradient(135deg,#6c5ce7,#ff6b6b,#ffe66d);-webkit-backg
 .hint{margin-top:12px;font-size:13px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:6px}
 .hint .dot{width:6px;height:6px;background:#fff;border-radius:50%;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
 .second-layer{max-height:0;opacity:0;overflow:hidden;transition:all .5s cubic-bezier(.34,1.56,.64,1);margin-top:0}
-.quiz-window.expanded .second-layer{max-height:300px;opacity:1;margin-top:20px}
+.quiz-window.expanded .second-layer{max-height:400px;opacity:1;margin-top:20px}
 .divider{height:1px;background:rgba(255,255,255,.3);margin:16px 0}
-
 .quiz-title{padding:14px 18px;border-radius:14px;background:rgba(255,255,255,.92);color:#1a1a1a;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:15px;cursor:pointer;transform:translateY(10px);opacity:0;transition:all .4s ease;box-shadow:0 4px 20px rgba(0,0,0,.1)}
 .quiz-window.expanded .quiz-title{transform:translateY(0);opacity:1}
-.quiz-title:nth-child(1){transition-delay:.1s}
-.quiz-title:nth-child(2){transition-delay:.2s}
+.quiz-title:nth-child(2){transition-delay:.1s}
+.quiz-title:nth-child(3){transition-delay:.2s}
 .quiz-title:hover{background:#fff;transform:translateY(-2px) scale(1.02)}
-.quiz-title .arrow{opacity:.5}
 .quiz-title.hidden-quiz{background:linear-gradient(135deg,#ffe66d,#ff9f1c);color:#1a1a1a}
-
-.suggestion{margin-top:28px;max-width:520px;width:100%;padding:16px;border-radius:16px;background:rgba(255,255,255,.65);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.5);font-size:13px;line-height:1.5}
-.suggestion b{font-size:14px}
 </style></head><body>
 <div class="bg-mesh"></div><div class="bg-blur"></div>
 <a href="index.html" class="floating-home">🏠</a>
-
 <h1>Welcome to <span>drawdrawdraw2025</span></h1>
-<p class="sub">Tap quiz window → reveal quizzes → tap title to open</p>
-
+<p class="sub">Tap quiz window → reveal → tap title to open</p>
 <div class="quiz-window" id="quizWindow">
 <div class="q-icon">📝</div>
 <h3>MPSC Quiz Hub</h3>
-<p>90 Questions • Set A & B • Click to explore quizzes</p>
-<div class="hint"><span class="dot"></span> Click to reveal</div>
-
-<div class="second-layer" id="secondLayer">
+<p>180 + 90 Questions • 3 Sets</p>
+<div class="hint"><span class="dot"></span> Click to reveal - 2 steps</div>
+<div class="second-layer">
 <div class="divider"></div>
-<div class="quiz-title" onclick="event.stopPropagation(); location.href='index.html'">
-<span>📝 Talathi MPSC 2026 - 90 Qs</span><span class="arrow">→</span>
-</div>
-<div class="quiz-title hidden-quiz" onclick="event.stopPropagation(); location.href='quiz2.html'">
-<span>📚 Second Quiz - New</span><span class="arrow">→</span>
+<div class="quiz-title" onclick="event.stopPropagation(); location.href='index.html'"><span>📝 Set A+B - 180 Qs</span><span>→</span></div>
+<div class="quiz-title hidden-quiz" onclick="event.stopPropagation(); location.href='quiz2.html'"><span>📚 Set C - 90 New Qs</span><span>→</span></div>
 </div>
 </div>
-</div>
-
-<div class="suggestion">
-<b>💡 More interactive ideas for you:</b><br>
-1. <b>Fan-out cards</b> - quizzes spread like playing cards on first click<br>
-2. <b>Flip 3D</b> - window flips to show back side with quiz list<br>
-3. <b>Swipe drawer</b> - swipe up from bottom to reveal second quiz<br>
-4. <b>Current: Expand + staggered reveal</b> - best for mobile, 2-step as you asked<br><br>
-Want me to change to fan-out or flip? Tell me number.
-</div>
-
 <script>
-const win = document.getElementById('quizWindow');
-let expanded = false;
-win.addEventListener('click', ()=>{
-  if(!expanded){
-    win.classList.add('expanded');
-    expanded=true;
-    win.querySelector('.hint').innerHTML='👇 Tap title to open';
-  } else {
-    // if already expanded and click on empty area, go to first quiz
-    // location.href='index.html';
-  }
-});
+const win=document.getElementById('quizWindow');let exp=false;
+win.addEventListener('click',()=>{if(!exp){win.classList.add('expanded');exp=true;win.querySelector('.hint').innerHTML='👇 Tap title to open';}});
 </script>
 </body></html>
