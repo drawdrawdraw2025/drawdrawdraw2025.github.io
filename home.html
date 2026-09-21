@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home • Modern Hub 2025</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#0f0f12;--violet:#6c5ce7;--coral:#ff6b6b;--mint:#4ecdc4;--sun:#ffe66d}
+body{font-family:system-ui,Arial,sans-serif;background:#fbfaf8;color:var(--ink);min-height:100vh;overflow-x:hidden}
+.bg-mesh{position:fixed;inset:0;z-index:-2;background:radial-gradient(at 20% 20%,#a78bfa 0%,transparent 50%),radial-gradient(at 80% 20%,#f472b6 0%,transparent 50%),radial-gradient(at 40% 80%,#4ecdc4 0%,transparent 50%),radial-gradient(at 90% 80%,#ffe66d 0%,transparent 50%),#fbfaf8}
+.bg-blur{position:fixed;inset:0;z-index:-1;backdrop-filter:blur(40px);background:rgba(251,250,248,0.6)}
+.floating-home{position:fixed;top:16px;left:16px;z-index:9999;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.72);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(255,255,255,0.6);border-radius:50%;font-size:24px;text-decoration:none;box-shadow:0 8px 32px rgba(0,0,0,0.12);transition:all .35s cubic-bezier(0.34,1.56,0.64,1)}
+.floating-home:hover{background:rgba(255,255,255,0.9);transform:translateY(-2px) scale(1.08)}
+header{max-width:1100px;margin:0 auto;padding:100px 20px 40px;text-align:center}
+.pill{display:inline-flex;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,0.7);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.5);font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.06)}
+h1{font-size:clamp(36px,7vw,72px);line-height:.95;letter-spacing:-.03em;margin:20px 0 16px;font-weight:900}
+h1 span.gradient{background:linear-gradient(135deg,var(--violet),var(--coral),var(--sun));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{max-width:640px;margin:0 auto;font-size:18px;opacity:.7;line-height:1.5}
+.grid{max-width:1100px;margin:40px auto;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.card{position:relative;border-radius:28px;padding:24px;background:rgba(255,255,255,0.65);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(255,255,255,0.5);box-shadow:0 20px 60px rgba(0,0,0,.08);transition:all .4s cubic-bezier(0.34,1.56,0.64,1);text-decoration:none;color:inherit;display:block}
+.card:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 30px 80px rgba(0,0,0,.12)}
+.card-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px;background:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.6)}
+.card h3{font-size:20px;font-weight:800;margin-bottom:6px}
+.card p{font-size:14px;opacity:.65;line-height:1.5}
+.card.featured{grid-column:span 2;background:linear-gradient(135deg,rgba(108,92,231,.9),rgba(255,107,107,.85));color:#fff;border-color:rgba(255,255,255,.4)}
+@media(max-width:700px){.card.featured{grid-column:span 1}}
+.rule{max-width:1100px;margin:60px auto 0;padding:20px;border-radius:20px;background:rgba(255,255,255,.6);backdrop-filter:blur(16px);border:1px dashed rgba(0,0,0,.15);font-size:13px;line-height:1.6}
+.rule code{background:rgba(0,0,0,.06);padding:2px 6px;border-radius:6px;font-size:12px}
+footer{text-align:center;padding:40px 20px;opacity:.5;font-size:13px}
+</style>
+</head>
+<body>
+<div class="bg-mesh"></div><div class="bg-blur"></div>
+<a href="index.html" class="floating-home" title="Go to Quiz">🏠</a>
+<header>
+<div class="pill">✨ v14 Modern Hub • Glassmorphism 2025 • Floating 🏠</div>
+<h1>Welcome to <span class="gradient">drawdrawdraw2025</span> hub</h1>
+<p class="subtitle">Floating 🏠 button at upper left — partially transparent, background blur shows text behind. Tap it from any page to come here. Modern glassy UI like 2025 websites.</p>
+</header>
+<div class="grid">
+<a href="index.html" class="card featured"><div class="card-icon">📝</div><h3>तलाठी MPSC 2026 Quiz</h3><p>90 questions • Sets A & B • Marathi + English • Filters. Main site. Tap to start.</p></a>
+<a href="drawing-backup.html" class="card"><div class="card-icon">🎨</div><h3>Drawing Pad</h3><p>Daily prompt robot + doodle pad backup.</p></a>
+<a href="https://github.com/drawdrawdraw2025/drawdrawdraw2025.github.io" class="card"><div class="card-icon">💻</div><h3>Source on GitHub</h3><p>Free hosting via Pages.</p></a>
+</div>
+<div class="rule">
+<b>🔧 Easiest way to add same floating 🏠 button to all future pages (upper left, transparent):</b><br><br>
+<b>1. HTML</b> — paste right after <code>&lt;body&gt;</code>:<br>
+<code>&lt;a href="home.html" class="floating-home" title="Home"&gt;🏠&lt;/a&gt;</code><br><br>
+<b>2. CSS</b> — inside <code>&lt;style&gt;</code>:<br>
+<code>.floating-home{position:fixed;top:16px;left:16px;z-index:9999;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.72);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(255,255,255,0.6);border-radius:50%;font-size:24px;text-decoration:none;box-shadow:0 8px 32px rgba(0,0,0,0.12);transition:all .35s cubic-bezier(0.34,1.56,0.64,1);}<br>.floating-home:hover{background:rgba(255,255,255,0.9);transform:translateY(-2px) scale(1.08);}</code><br><br>
+That's it — floating, 72% transparent white, blur 16px makes background text partially visible, always upper left, always goes to <code>home.html</code>. On <code>home.html</code> itself, change href to <code>index.html</code> to go back to quiz.
+</div>
+<footer>home.html • Modern hub • Glass + blur + floating 🏠 • v14</footer>
+</body>
+</html>
