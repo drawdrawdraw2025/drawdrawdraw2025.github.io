@@ -1,0 +1,37 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Visual Audit - 3 Buttons</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#f6f7fb;padding:20px}
+.card{background:#fff;border-radius:12px;padding:16px;margin:12px 0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.badge{padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700;display:inline-block;margin:2px}
+.ok{background:#e8f5e9;color:#2e7d32} .fail{background:#ffebee;color:#c62828}
+iframe{width:100%;height:220px;border:1px solid #ddd;border-radius:8px;background:#fff}
+</style></head><body>
+<h1>🔍 Visual Audit - 3 Buttons at Upper Left (🏠 ⬆ ⬇)</h1>
+<p>Each quiz should show: floating-home (52px, top16 left16, z9999, rgba 0.72 blur16) + float-up (44px top80 left16 z9998 opacity0.45) + float-down (44px top132)</p>
+<div id="list"></div>
+<script>
+const pages=[
+"home.html","index.html","quiz2.html","quiz3.html","quiz4.html","quiz5.html","quiz6.html","quiz7.html","quiz8.html","quiz10.html","quiz11.html"
+];
+const list=document.getElementById('list');
+pages.forEach(p=>{
+  const div=document.createElement('div');div.className='card';
+  div.innerHTML=`<h3>${p}</h3><div id="s-${p}">Checking...</div><iframe src="${p}"></iframe>`;
+  list.appendChild(div);
+  fetch(p).then(r=>r.text()).then(t=>{
+    const hasHome = t.includes('floating-home') && t.includes('🏠');
+    const hasUp = t.includes('float-up') && t.includes('⬆');
+    const hasDown = t.includes('float-down') && t.includes('⬇');
+    const hasCSS = t.includes('.floating-home{position:fixed;top:16px;left:16px;z-index:9999');
+    const ok = hasHome && hasUp && hasDown && hasCSS;
+    document.getElementById(`s-${p}`).innerHTML=`
+      <span class="badge ${hasHome?'ok':'fail'}">🏠 Home: ${hasHome?'OK':'MISSING'}</span>
+      <span class="badge ${hasUp?'ok':'fail'}">⬆ Up: ${hasUp?'OK':'MISSING'}</span>
+      <span class="badge ${hasDown?'ok':'fail'}">⬇ Down: ${hasDown?'OK':'MISSING'}</span>
+      <span class="badge ${hasCSS?'ok':'fail'}">CSS z9999: ${hasCSS?'OK':'MISSING'}</span>
+      <span class="badge ${ok?'ok':'fail'}">${ok?'✅ PASS':'❌ FAIL'}</span>
+    `;
+  });
+});
+</script>
+</body></html>
