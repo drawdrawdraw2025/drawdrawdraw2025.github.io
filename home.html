@@ -17,7 +17,7 @@ h1 span{background:linear-gradient(135deg,#6c5ce7,#ff6b6b,#ffe66d);-webkit-backg
 .hint .dot{width:6px;height:6px;background:#fff;border-radius:50%;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .second-layer{max-height:0;opacity:0;overflow:hidden;transition:all .5s cubic-bezier(.34,1.56,.64,1);margin-top:0}
-.quiz-window.expanded .second-layer{max-height:800px;opacity:1;margin-top:20px}
+.quiz-window.expanded .second-layer{max-height:1100px;opacity:1;margin-top:20px}
 .divider{height:1px;background:rgba(255,255,255,.3);margin:16px 0}
 .quiz-title{padding:14px 18px;border-radius:14px;background:rgba(255,255,255,.92);color:#1a1a1a;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;cursor:pointer;transform:translateY(10px);opacity:0;transition:all .4s ease;box-shadow:0 4px 20px rgba(0,0,0,.1)}
 .quiz-window.expanded .quiz-title{transform:translateY(0);opacity:1}
@@ -27,12 +27,14 @@ h1 span{background:linear-gradient(135deg,#6c5ce7,#ff6b6b,#ffe66d);-webkit-backg
 .quiz-title:nth-child(5){transition-delay:.32s}
 .quiz-title:nth-child(6){transition-delay:.40s}
 .quiz-title:nth-child(7){transition-delay:.48s}
+.quiz-title:nth-child(8){transition-delay:.56s}
 .quiz-title:hover{background:#fff;transform:translateY(-2px) scale(1.02)}
 .quiz-title.hidden-quiz{background:linear-gradient(135deg,#ffe66d,#ff9f1c);color:#1a1a1a}
 .quiz-title.quiz4{background:linear-gradient(135deg,#4ecdc4,#44a08d);color:#fff}
 .quiz-title.quiz5{background:linear-gradient(135deg,#a78bfa,#6c5ce7);color:#fff;border:2px solid #fff}
 .quiz-title.quiz6{background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:#fff;border:2px solid #fff}
 .quiz-title.quiz7{background:linear-gradient(135deg,#00b894,#0984e3);color:#fff;border:2px solid #fff}
+.quiz-title.quiz8{background:linear-gradient(135deg,#fdcb6e,#e17055);color:#fff;border:2px solid #fff}
 
 .float-up,.float-down{position:fixed;left:16px;z-index:9998;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.18);backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%);border:1px solid rgba(255,255,255,0.18);border-radius:50%;font-size:18px;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,0.08);transition:all .3s ease;opacity:0.45;color:#1a1a1a;cursor:pointer}
 .float-up:hover,.float-down:hover{background:rgba(255,255,255,0.38);opacity:0.92;transform:translateY(-1px) scale(1.06)}
@@ -49,7 +51,7 @@ h1 span{background:linear-gradient(135deg,#6c5ce7,#ff6b6b,#ffe66d);-webkit-backg
 <div class="quiz-window" id="quizWindow">
 <div class="q-icon">📝</div>
 <h3>MPSC Quiz Hub</h3>
-<p>540 + 90 Questions • 7 Sets • 2-step open</p>
+<p>630 + 90 Questions • 8 Sets • 2-step open</p>
 <div class="hint"><span class="dot"></span> Click to reveal</div>
 <div class="second-layer">
 <div class="divider"></div>
@@ -58,7 +60,8 @@ h1 span{background:linear-gradient(135deg,#6c5ce7,#ff6b6b,#ffe66d);-webkit-backg
 <div class="quiz-title quiz4" onclick="event.stopPropagation(); location.href='quiz3.html'"><span>🚀 Set D - 90 Qs - 4th</span><span>→</span></div>
 <div class="quiz-title quiz5" onclick="event.stopPropagation(); location.href='quiz4.html'"><span>🔥 Set E - 90 Qs - 5th</span><span>→</span></div>
 <div class="quiz-title quiz6" onclick="event.stopPropagation(); location.href='quiz5.html'"><span>⚡ Set F - 90 Qs - 6th</span><span>→</span></div>
-<div class="quiz-title quiz7" onclick="event.stopPropagation(); location.href='quiz6.html'"><span>💎 Set G - 90 Qs - 7th (New as-is)</span><span>→</span></div>
+<div class="quiz-title quiz7" onclick="event.stopPropagation(); location.href='quiz6.html'"><span>💎 Set G - 90 Qs - 7th</span><span>→</span></div>
+<div class="quiz-title quiz8" onclick="event.stopPropagation(); location.href='quiz7.html'"><span>🌟 Set H - 90 Qs - 8th (New as-is)</span><span>→</span></div>
 </div>
 </div>
 <script>
