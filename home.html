@@ -158,4 +158,61 @@ h1 span{background:linear-gradient(135deg,#6c5ce7,#ff6b6b,#ffe66d);-webkit-backg
 const win=document.getElementById('quizWindow');let exp=false;
 win.addEventListener('click',()=>{if(!exp){win.classList.add('expanded');exp=true;win.querySelector('.hint').innerHTML='👇 Tap title to open quiz';}});
 </script>
+
+<!-- Tip Jar Paywall - as agent for PBG - earns to metaforcecrore@okicici + olderreport808@walletofsatoshi.com -->
+<div id="paywall" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(15,15,18,0.92);backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px">
+  <div style="width:100%;max-width:420px;background:#fff;border-radius:24px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center">
+    <div style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#6c5ce7,#ff6b6b);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px">💰</div>
+    <h3 style="font-size:20px;font-weight:900;margin-bottom:6px;color:#0f0f12">Unlock MPSC Quiz — Tip Jar</h3>
+    <p style="font-size:13px;opacity:.6;color:#0f0f12;margin-bottom:16px;line-height:1.5">Scan paid? Tip <b>10₹ via G-Pay</b> or <b>100 sats via Lightning</b> → unlocks all 30+ quizzes. Earnings go directly to PBG (as your agent).</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <a href="upi://pay?pa=metaforcecrore@okicici&pn=PBG%20Mmindpower&am=10&cu=INR" onclick="localStorage.setItem('pbg_paid','gpay');return true" style="padding:14px;border-radius:12px;background:#4285f4;color:#fff;text-decoration:none;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px">💳 G-Pay 10₹</a>
+      <a href="lightning:olderreport808@walletofsatoshi.com" onclick="localStorage.setItem('pbg_paid','lightning');localStorage.setItem('pbg_paid_amt','100');return true" style="padding:14px;border-radius:12px;background:#facc15;color:#111;text-decoration:none;font-weight:800;font-size:14px;border:1px solid #eab308;display:flex;align-items:center;justify-content:center;gap:6px">⚡ 100 sats</a>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button onclick="localStorage.setItem('pbg_paid','yes');document.getElementById('paywall').style.display='none';document.querySelector('.quiz-window').classList.add('expanded');window.scrollTo({top:0,behavior:'smooth'})" style="flex:1;padding:12px;border-radius:12px;background:#10b981;color:#fff;border:none;font-weight:800;cursor:pointer">I Paid → Unlock</button>
+      <button onclick="document.getElementById('paywall').style.display='none'" style="padding:12px 16px;border-radius:12px;background:#f3f4f6;color:#111;border:none;font-weight:700;cursor:pointer">Later</button>
+    </div>
+    <p style="font-size:11px;opacity:.5;margin-top:10px">Tip Jar as agent — UPI <code>metaforcecrore@okicici</code> • Lightning <code>olderreport808@walletofsatoshi.com</code> • <span id="paywall-status" style="color:#10b981"></span></p>
+  </div>
+</div>
+<script>
+// Paywall logic - show if not paid, unlock if paid
+(function(){
+  const paid = localStorage.getItem('pbg_paid');
+  const qw = document.querySelector('.quiz-window');
+  const origClick = qw ? qw.onclick : null;
+  if(qw){
+    qw.addEventListener('click', function(e){
+      const isPaid = localStorage.getItem('pbg_paid');
+      if(!isPaid && !qw.classList.contains('expanded')){
+        e.stopPropagation();
+        e.preventDefault();
+        document.getElementById('paywall').style.display='flex';
+        return false;
+      }
+    }, true);
+    // If already paid, expand directly
+    if(paid){
+      // keep expanded behavior
+    }
+  }
+  // Show paywall status if paid
+  if(paid){
+    const el=document.getElementById('paywall-status');
+    if(el) el.textContent='Unlocked via '+paid;
+  }
+  // Auto-show paywall on quiz titles click if not paid
+  document.querySelectorAll('.quiz-title').forEach(el=>{
+    el.addEventListener('click', function(e){
+      if(!localStorage.getItem('pbg_paid')){
+        e.stopPropagation();
+        e.preventDefault();
+        document.getElementById('paywall').style.display='flex';
+      }
+    }, true);
+  });
+})();
+</script>
+
 </body></html>
