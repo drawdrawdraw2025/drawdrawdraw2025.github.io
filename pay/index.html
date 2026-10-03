@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#102A56">
+<title>☕ Small Support — Mmindpower Bot</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(160deg, #0d1f3c 0%, #102A56 55%, #1b3a70 100%);
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 20px; color: #fff;
+  }
+  .card {
+    background: #fff; color: #1a1a2e; border-radius: 22px;
+    max-width: 380px; width: 100%; padding: 34px 26px 26px;
+    text-align: center; box-shadow: 0 18px 50px rgba(0,0,0,.45);
+  }
+  .cup { font-size: 52px; line-height: 1; }
+  h1 { font-size: 21px; color: #102A56; margin: 12px 0 4px; }
+  .sub { font-size: 13.5px; color: #5a6478; margin-bottom: 18px; }
+  .amt {
+    font-size: 44px; font-weight: 800; color: #102A56; letter-spacing: -1px;
+    margin-bottom: 2px;
+  }
+  .free { font-size: 12.5px; color: #0a7a3d; font-weight: 600; margin-bottom: 22px; }
+  .btn {
+    display: block; width: 100%; border: none; cursor: pointer;
+    background: linear-gradient(135deg, #102A56, #1f4d99);
+    color: #fff; font-size: 18px; font-weight: 700;
+    padding: 16px; border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(16,42,86,.35);
+    transition: transform .08s ease;
+  }
+  .btn:active { transform: scale(.97); }
+  .apps { font-size: 12.5px; color: #8a93a5; margin: 12px 0 20px; }
+  .divider { border-top: 1px dashed #d7dce6; margin: 0 0 16px; }
+  .manual { font-size: 12.5px; color: #5a6478; margin-bottom: 8px; }
+  .vpa {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    background: #f1f4fa; border: 1px solid #dbe2ef; border-radius: 10px;
+    padding: 10px 12px; font-family: ui-monospace, Consolas, monospace;
+    font-size: 13px; color: #102A56; word-break: break-all;
+  }
+  .copy {
+    border: none; background: #102A56; color: #fff; font-size: 11.5px;
+    padding: 7px 10px; border-radius: 7px; cursor: pointer; flex-shrink: 0;
+  }
+  .thanks { margin-top: 20px; font-size: 14px; color: #8a5a00; }
+  .foot { margin-top: 14px; font-size: 10.5px; color: #aab2c2; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="cup">☕</div>
+    <h1>Small Support — Mmindpower Bot</h1>
+    <div class="sub">If today's quiz helped you even a little 💖</div>
+    <div class="amt">₹5</div>
+    <div class="free">100% optional · Mmindpower stays free forever 🎓</div>
+    <button class="btn" id="payBtn" onclick="openUpi()">💸 Pay ₹5 with UPI</button>
+    <div class="apps">You'll be asked to choose: Google Pay · PhonePe · Paytm · BHIM …</div>
+    <div class="divider"></div>
+    <div class="manual">Nothing happened? Open any UPI app and pay to this ID:</div>
+    <div class="vpa">
+      <span id="vpaText">mmindpower.contact@oksbi</span>
+      <button class="copy" onclick="copyVpa(this)">COPY</button>
+    </div>
+    <div class="thanks">🙏 धन्यवाद — तुमचा प्रेम आमचं इंधन! 💪</div>
+    <div class="foot">Secure UPI payment · handled entirely by your own UPI app</div>
+  </div>
+
+<script>
+  var UPI = "upi://pay?pa=mmindpower.contact@oksbi&pn=Mmindpower&am=5&cu=INR&tn=Mmindpower%20Support";
+  function openUpi() { window.location.href = UPI; }
+  // Try to hand off to UPI apps automatically on load (Android)
+  window.addEventListener("load", function () {
+    setTimeout(function () { window.location.href = UPI; }, 800);
+  });
+  function copyVpa(btn) {
+    var txt = document.getElementById("vpaText").textContent;
+    function done() {
+      btn.textContent = "COPIED ✓";
+      setTimeout(function () { btn.textContent = "COPY"; }, 1500);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(done).catch(function(){ fallback(); });
+    } else { fallback(); }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = txt; document.body.appendChild(ta);
+      ta.select(); try { document.execCommand("copy"); } catch(e){}
+      document.body.removeChild(ta); done();
+    }
+  }
+</script>
+</body>
+</html>
