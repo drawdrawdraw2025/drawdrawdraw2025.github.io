@@ -152,6 +152,7 @@
       <button class="llbtn" id="ll-friend">📞<small>Ask Friend</small></button>
       <button class="llbtn" id="ll-expert">👨‍🏫<small>Expert</small></button>
     </div>
+    <div id="llhint" style="text-align:center;font-size:10px;color:rgba(255,255,255,.62);margin:-4px 0 10px;">🔋 lifelines refill after Q10</div>
     <div class="card"><div id="qbody"></div></div>
     <div id="opts"></div>
     <div class="exp" id="exp"></div>
@@ -254,6 +255,8 @@ function renderQ(){
   el("btn-next").classList.add("hidden");
   document.querySelectorAll(".opt").forEach(function(b){ b.addEventListener("click", function(){ pick(parseInt(b.dataset.ix)); }); });
   (REMOVED[CUR+"_"+st.i]||[]).forEach(function(ix){ var b=document.querySelector('.opt[data-ix="'+ix+'"]'); if(b) b.classList.add("gone"); });
+  var nxt=(Math.floor(st.i/10)+1)*10;
+  el("llhint").textContent = (nxt>=total) ? "🔋 final block — no more refills this run" : ("🔋 lifelines refill at Q"+(nxt+1)+" onwards");
   refreshLL();
 }
 function pick(ix){
@@ -281,7 +284,17 @@ el("btn-next").addEventListener("click", function(){
     var pc = Math.round(st.correct/total*100);
     st.best = (st.best==null)? pc : Math.max(st.best,pc);
     saveSt(); renderResult(); show("view-result");
-  } else { st.i++; saveSt(); renderQ(); }
+  } else {
+    st.i++;
+    var recharged = (st.i % 10 === 0);
+    if (recharged){ st.ll = llDefaults(); }
+    saveSt(); renderQ();
+    if (recharged){
+      var blkEnd = Math.min(st.i+10, total);
+      openLL('<h3>✨ Lifelines Recharged! ✨</h3><div class="bubble" style="text-align:center">सगळ्या लाइफलाइन्स पुन्हा सज्ज! 🔋<br><span style="opacity:.78">All 4 lifelines are back for Q'+(st.i+1)+' – '+blkEnd+' 💪</span></div>');
+      setTimeout(closeLL, 2300);
+    }
+  }
 });
 
 /* ---------- KBC lifelines (1 use each per run) ---------- */
