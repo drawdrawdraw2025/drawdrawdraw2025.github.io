@@ -59,7 +59,7 @@
     <div class="sub">If today's quiz helped you even a little 💖</div>
     <div class="amt">₹5</div>
     <div class="free">100% optional · Mmindpower stays free forever 🎓</div>
-    <a class="btn" id="payBtn" style="text-decoration:none;line-height:1.25;" href="upi://pay?pa=mmindpower.contact@oksbi&pn=Mmindpower&am=5&cu=INR&tn=Mmindpower%20Support">💸 Pay ₹5 with UPI</a>
+    <a class="btn" id="payBtn" onclick="openUpi(event)" style="text-decoration:none;line-height:1.25;" href="upi://pay?pa=mmindpower.contact@oksbi&pn=Mmindpower&am=5&cu=INR&tn=Mmindpower%20Support">💸 Pay ₹5 with UPI</a>
     <div class="apps">You'll be asked to choose: Google Pay · PhonePe · Paytm · BHIM …</div>
     <div class="divider"></div>
     <div class="manual">Nothing happened? Open any UPI app and pay to this ID:</div>
@@ -71,13 +71,29 @@
     <div class="foot">Secure UPI payment · handled entirely by your own UPI app</div>
   </div>
 
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
+  var PAGE_URL = "https://drawdrawdraw2025.github.io/pay/";
   var UPI = "upi://pay?pa=mmindpower.contact@oksbi&pn=Mmindpower&am=5&cu=INR&tn=Mmindpower%20Support";
-  function openUpi() { window.location.href = UPI; }
-  // Try to hand off to UPI apps automatically on load (Android)
-  window.addEventListener("load", function () {
-    setTimeout(function () { window.location.href = UPI; }, 800);
-  });
+  var IN_TG = !!(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData);
+  function openUpi(e) {
+    if (IN_TG) {
+      // Telegram webview blocks upi:// — send the tap to a real browser, which fires the app picker
+      if (e && e.preventDefault) e.preventDefault();
+      if (window.Telegram.WebApp.openLink) { window.Telegram.WebApp.openLink(PAGE_URL); return; }
+      window.open(PAGE_URL, "_blank"); return;
+    }
+    window.location.href = UPI;
+  }
+  // Auto hand-off to UPI apps on load — only in a real browser (Telegram webview cannot)
+  if (!IN_TG) {
+    window.addEventListener("load", function () {
+      setTimeout(function () { window.location.href = UPI; }, 800);
+    });
+  } else if (window.Telegram.WebApp.ready) {
+    window.Telegram.WebApp.ready();
+    if (window.Telegram.WebApp.expand) window.Telegram.WebApp.expand();
+  }
   function copyVpa(btn) {
     var txt = document.getElementById("vpaText").textContent;
     function done() {
