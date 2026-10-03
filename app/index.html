@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d1f3c">
+<title>Mmindpower 📚 Practice App</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(160deg, #0d1f3c 0%, #102A56 55%, #1b3a70 100%);
+    min-height: 100vh; color: #16203a; padding: 14px 14px 30px;
+  }
+  .wrap { max-width: 520px; margin: 0 auto; }
+  .brand { text-align: center; color: #fff; padding: 14px 0 18px; }
+  .brand h1 { font-size: 22px; letter-spacing: .3px; }
+  .brand .tag { font-size: 12.5px; opacity: .75; margin-top: 3px; }
+  .card {
+    background: #fff; border-radius: 18px; padding: 20px 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35); margin-bottom: 14px;
+  }
+  /* shelf */
+  .setcard {
+    display: flex; align-items: center; gap: 14px; background: #fff;
+    border-radius: 16px; padding: 16px; margin-bottom: 12px; cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,.30); transition: transform .08s ease;
+  }
+  .setcard:active { transform: scale(.98); }
+  .badgeL {
+    width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+    background: linear-gradient(135deg,#102A56,#1f4d99); color: #fff;
+    font-size: 24px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+  }
+  .setinfo { flex: 1; }
+  .setinfo .nm { font-weight: 700; font-size: 16px; color: #102A56; }
+  .setinfo .sub { font-size: 12px; color: #7a8499; margin-top: 2px; }
+  .pill { font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 999px; }
+  .pill.prog { background: #fff3d6; color: #8a5a00; }
+  .pill.best { background: #d9f2e2; color: #0a7a3d; }
+  /* quiz */
+  .topbar { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .qcount { color: #fff; font-size: 13px; font-weight: 700; white-space: nowrap; }
+  .bar { flex: 1; height: 8px; background: rgba(255,255,255,.22); border-radius: 99px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: #ffd166; width: 0; border-radius: 99px; transition: width .25s ease; }
+  .seg { display: flex; background: rgba(255,255,255,.16); border-radius: 10px; padding: 3px; gap: 3px; margin-bottom: 12px; }
+  .seg button {
+    flex: 1; border: none; background: transparent; color: #dfe7f5;
+    font-size: 12.5px; font-weight: 700; padding: 7px 0; border-radius: 8px; cursor: pointer;
+  }
+  .seg button.on { background: #fff; color: #102A56; }
+  .qtext { font-size: 15.5px; line-height: 1.65; white-space: pre-wrap; word-break: break-word; }
+  .qtext.mr { margin-bottom: 12px; }
+  .qtext.en { color: #46536e; font-size: 14.5px; border-top: 1px dashed #e2e7f0; padding-top: 12px; }
+  .qtext.en:only-child, .qtext.mr:last-child { border-top: none; padding-top: 0; }
+  .tbl { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; overflow-x: auto; }
+  .opt {
+    display: flex; gap: 12px; align-items: flex-start; width: 100%; text-align: left;
+    background: #f4f6fb; border: 2px solid #e3e8f2; border-radius: 14px;
+    padding: 14px; font-size: 14.5px; line-height: 1.5; margin-bottom: 10px; cursor: pointer;
+    color: #1a2440; transition: border-color .12s ease, background .12s ease;
+  }
+  .opt .L {
+    font-weight: 800; color: #102A56; background: #e7ecf7; border-radius: 8px;
+    min-width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .opt.sel { border-color: #102A56; }
+  .opt.ok { background: #e3f7ea; border-color: #1f9d4d; }
+  .opt.ok .L { background: #1f9d4d; color: #fff; }
+  .opt.no { background: #fdecec; border-color: #d64545; }
+  .opt.no .L { background: #d64545; color: #fff; }
+  .opt.lock { pointer-events: none; }
+  .exp {
+    background: #fff8e8; border: 1px solid #f0dfae; border-radius: 12px;
+    padding: 13px; font-size: 13.5px; line-height: 1.6; color: #5c4a10;
+    margin: 4px 0 12px; display: none; white-space: pre-wrap;
+  }
+  .bigbtn {
+    display: block; width: 100%; border: none; cursor: pointer; text-align: center;
+    background: linear-gradient(135deg,#102A56,#1f4d99); color: #fff;
+    font-size: 16px; font-weight: 700; padding: 15px; border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(16,42,86,.35); margin-top: 6px; text-decoration: none;
+  }
+  .bigbtn.ghost { background: #eef1f7; color: #102A56; box-shadow: none; }
+  .bigbtn.gold { background: linear-gradient(135deg,#c98a00,#e8a91c); }
+  .row2 { display: flex; gap: 10px; }
+  .row2 .bigbtn { flex: 1; }
+  .center { text-align: center; }
+  .bigscore { font-size: 54px; font-weight: 800; color: #102A56; letter-spacing: -2px; }
+  .muted { color: #7a8499; font-size: 13px; }
+  .revq { border-bottom: 1px solid #edf0f6; padding: 12px 0; font-size: 13.5px; line-height: 1.55; }
+  .revq:last-child { border-bottom: none; }
+  .revq .ca { color: #0a7a3d; font-weight: 700; }
+  .revq .wa { color: #b03030; text-decoration: line-through; }
+  .spinner { color: #fff; text-align: center; padding: 40px 0; font-size: 14px; opacity: .85; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <h1>🎓 Mmindpower Practice</h1>
+    <div class="tag">MPSC GK • बहुभाषिक • Free forever</div>
+  </div>
+
+  <div id="view-shelf">
+    <div class="card center muted" id="shelf-note">Pick a set and start practising — progress saves automatically 💾</div>
+    <div id="shelf-list"></div>
+    <a class="bigbtn gold" id="btn-donate-shelf" href="https://drawdrawdraw2025.github.io/pay/">☕ Support Mmindpower ₹5</a>
+  </div>
+
+  <div id="view-quiz" class="hidden">
+    <div class="topbar">
+      <div class="qcount" id="qcount">Q 1/90</div>
+      <div class="bar"><i id="barfill"></i></div>
+    </div>
+    <div class="seg" id="langseg">
+      <button data-l="both" class="on">मराठी + EN</button>
+      <button data-l="mr">मराठी</button>
+      <button data-l="en">English</button>
+    </div>
+    <div class="card"><div id="qbody"></div></div>
+    <div id="opts"></div>
+    <div class="exp" id="exp"></div>
+    <button class="bigbtn hidden" id="btn-next">Next ▶</button>
+  </div>
+
+  <div id="view-result" class="hidden">
+    <div class="card center">
+      <div id="res-emoji" style="font-size:52px">🏆</div>
+      <div class="bigscore" id="res-score">0%</div>
+      <div style="font-weight:700" id="res-line">-</div>
+      <div class="muted" style="margin-top:6px" id="res-detail">-</div>
+    </div>
+    <button class="bigbtn" id="btn-review">🔍 Review mistakes</button>
+    <button class="bigbtn ghost" id="btn-replay">🔁 Replay this set</button>
+    <a class="bigbtn gold" id="btn-donate-res" href="https://drawdrawdraw2025.github.io/pay/">☕ Support Mmindpower ₹5</a>
+    <button class="bigbtn ghost" id="btn-shelf">🗂️ All sets</button>
+  </div>
+
+  <div id="view-review" class="hidden">
+    <div class="card"><div id="rev-body"></div></div>
+    <button class="bigbtn ghost" id="btn-back-res">◀ Back</button>
+  </div>
+</div>
+
+<script>
+var TG = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+var IN_TG = !!(TG && TG.initData);
+if (TG) { try { TG.ready(); TG.expand(); TG.setHeaderColor('#0d1f3c'); TG.setBackgroundColor('#0d1f3c'); } catch(e){} }
+var PAY_URL = "https://drawdrawdraw2025.github.io/pay/";
+var SETS = [ {id:"A", file:"data/set_a.json"}, {id:"B", file:"data/set_b.json"}, {id:"C", file:"data/set_c.json"} ];
+var DATA = {}, ST = {}, LANG = "both", CUR = null;
+
+/* ---------- storage: Telegram CloudStorage + localStorage mirror ---------- */
+function sset(k,v){ var s=JSON.stringify(v);
+  try{ localStorage.setItem("mm_"+k,s); }catch(e){}
+  if(IN_TG && TG.CloudStorage){ try{ TG.CloudStorage.setItem("mm_"+k,s,function(){}); }catch(e){} } }
+function sget(k,cb){ var loc=null; try{ loc=localStorage.getItem("mm_"+k); }catch(e){}
+  if(IN_TG && TG.CloudStorage){ try{ TG.CloudStorage.getItem("mm_"+k,function(e,v){
+    if(!e && v){ try{ cb(JSON.parse(v)); return; }catch(_){ } }
+    try{ cb(loc?JSON.parse(loc):null); }catch(_){ cb(null); } }); return; }catch(e){} }
+  try{ cb(loc?JSON.parse(loc):null); }catch(_){ cb(null); } }
+
+/* ---------- helpers ---------- */
+function el(id){ return document.getElementById(id); }
+function show(v){ ["view-shelf","view-quiz","view-result","view-review"].forEach(function(x){ el(x).classList.toggle("hidden", x!==v); });
+  if(TG && TG.BackButton){ try{ if(v==="view-shelf"){TG.BackButton.hide();} else {TG.BackButton.show();} }catch(e){} } }
+function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function isTbl(t){ return /\|/.test(t) || /─/.test(t) || /═/.test(t); }
+function openDonate(){ if(IN_TG && TG.openLink){ TG.openLink(PAY_URL); } else { window.location.href = PAY_URL; } }
+["btn-donate-shelf","btn-donate-res"].forEach(function(id){ el(id).addEventListener("click", function(e){ e.preventDefault(); openDonate(); }); });
+if (TG && TG.BackButton){ try{ TG.BackButton.onClick(function(){ if(!el("view-review").classList.contains("hidden")){ backFromReview(); } else { goShelf(); } }); }catch(e){} }
+
+/* ---------- state ---------- */
+function stShape(){ return {i:0, correct:0, wrong:[], finished:false, best:null}; }
+function saveSt(){ sset("st_v1", ST); }
+
+/* ---------- shelf ---------- */
+function renderShelf(){
+  var html = "";
+  SETS.forEach(function(s){
+    var st = ST[s.id] || stShape();
+    var badge = "";
+    if (st.finished){ badge = '<span class="pill best">🏅 best '+st.best+'%</span>'; }
+    else if (st.i>0){ badge = '<span class="pill prog">▶ '+st.i+'/90</span>'; }
+    html += '<div class="setcard" data-set="'+s.id+'"><div class="badgeL">'+s.id+'</div>'+
+            '<div class="setinfo"><div class="nm">Set '+s.id+'</div>'+
+            '<div class="sub">90 questions • मराठी + English</div></div>'+badge+'</div>';
+  });
+  el("shelf-list").innerHTML = html;
+  document.querySelectorAll(".setcard").forEach(function(c){
+    c.addEventListener("click", function(){ startSet(c.dataset.set); });
+  });
+}
+
+/* ---------- quiz ---------- */
+function startSet(id){
+  CUR = id;
+  if (!ST[id]) ST[id] = stShape();
+  function go(){ if (ST[id].finished) { renderResult(); } else { renderQ(); } show(ST[id].finished?"view-result":"view-quiz"); }
+  if (DATA[id]) { go(); return; }
+  el("shelf-note").textContent = "Loading Set "+id+" … ⏳";
+  fetch("data/set_"+id.toLowerCase()+".json").then(function(r){ return r.json(); }).then(function(j){
+    DATA[id]=j; el("shelf-note").textContent="Pick a set and start practising — progress saves automatically 💾"; go();
+  }).catch(function(){ el("shelf-note").textContent="⚠️ Network hiccup — tap the set again."; });
+}
+function renderQ(){
+  var st = ST[CUR], q = DATA[CUR][st.i], total = DATA[CUR].length;
+  el("qcount").textContent = "Q "+(st.i+1)+"/"+total;
+  el("barfill").style.width = (st.i/total*100)+"%";
+  var qm = q.q_marathi||"", qe = q.q_english||"", body = "";
+  if (LANG!=="en" && qm){ body += '<div class="qtext mr'+(isTbl(qm)?' tbl':'')+'">'+esc(qm)+'</div>'; }
+  if (LANG!=="mr" && qe){ body += '<div class="qtext en'+(isTbl(qe)?' tbl':'')+'"'+(LANG==="en"?' style="border:none;padding-top:0"':'')+'>'+esc(qe)+'</div>'; }
+  el("qbody").innerHTML = body;
+  var letters=["A","B","C","D"], oh="";
+  (q.options||[]).slice(0,4).forEach(function(o,ix){ oh += '<button class="opt" data-ix="'+ix+'"><span class="L">'+letters[ix]+'</span><span>'+esc(o)+'</span></button>'; });
+  el("opts").innerHTML = oh;
+  el("exp").style.display="none"; el("exp").textContent="";
+  el("btn-next").classList.add("hidden");
+  document.querySelectorAll(".opt").forEach(function(b){ b.addEventListener("click", function(){ pick(parseInt(b.dataset.ix)); }); });
+}
+function pick(ix){
+  var st = ST[CUR], q = DATA[CUR][st.i], ci = q.correct_index;
+  document.querySelectorAll(".opt").forEach(function(b){
+    b.classList.add("lock");
+    var bi = parseInt(b.dataset.ix);
+    if (bi===ci) b.classList.add("ok");
+    else if (bi===ix) b.classList.add("no");
+  });
+  if (ix===ci){ st.correct++; } else { st.wrong.push({q: st.i, mine: ix}); }
+  var e = document.getElementById("exp");
+  var ex = q.explanation_marathi || "";
+  if (ex){ e.textContent = "💡 " + ex; e.style.display="block"; }
+  saveSt();
+  var total=DATA[CUR].length;
+  el("barfill").style.width = ((st.i+1)/total*100)+"%";
+  el("btn-next").textContent = (st.i+1>=total) ? "Finish 🏁" : "Next ▶";
+  el("btn-next").classList.remove("hidden");
+}
+el("btn-next").addEventListener("click", function(){
+  var st=ST[CUR], total=DATA[CUR].length;
+  if (st.i+1>=total){
+    st.finished = true;
+    var pc = Math.round(st.correct/total*100);
+    st.best = (st.best==null)? pc : Math.max(st.best,pc);
+    saveSt(); renderResult(); show("view-result");
+  } else { st.i++; saveSt(); renderQ(); }
+});
+
+/* ---------- lang ---------- */
+document.querySelectorAll("#langseg button").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("#langseg button").forEach(function(x){x.classList.remove("on");});
+    b.classList.add("on"); LANG=b.dataset.l; sset("lang",LANG); renderQ();
+  });
+});
+
+/* ---------- result & review ---------- */
+function renderResult(){
+  var st=ST[CUR], total=DATA[CUR].length, pc=Math.round(st.correct/total*100);
+  el("res-score").textContent = pc+"%";
+  el("res-detail").textContent = "Set "+CUR+" • "+st.correct+"/"+total+" correct • best "+st.best+"%";
+  var em="🌱", ln="Every master was once a beginner — पुन्हा प्रयत्न!";
+  if (pc>=90){ em="🏆"; ln="झक्कास! Outstanding!"; }
+  else if (pc>=70){ em="🌟"; ln="खूप छान! Great going!"; }
+  else if (pc>=50){ em="💪"; ln="चांगली सुरुवात! Keep pushing!"; }
+  el("res-emoji").textContent=em; el("res-line").textContent=ln;
+  el("btn-review").style.display = st.wrong.length? "block":"none";
+  el("btn-review").textContent = "🔍 Review "+st.wrong.length+" mistake"+(st.wrong.length===1?"":"s");
+}
+function renderReview(){
+  var st=ST[CUR], h="";
+  if (!st.wrong.length){ h='<div class="center muted">No mistakes — perfect run! 🎉</div>'; }
+  st.wrong.forEach(function(w){
+    var qi = (typeof w === "number") ? w : w.q;
+    var mine = (typeof w === "number") ? null : w.mine;
+    var q=DATA[CUR][qi], letters=["A","B","C","D"], ci=q.correct_index;
+    h += '<div class="revq"><b>Q'+(qi+1)+'</b> '+esc((q.q_english||q.q_marathi||"").slice(0,140))+'…<br>'+
+         '<span class="ca">✔ '+letters[ci]+') '+esc(q.options[ci])+'</span><br>'+
+         (mine!=null ? '<span class="wa">✘ your answer: '+esc(q.options[mine])+'</span><br>' : '')+
+         (q.explanation_marathi?'💡 '+esc(q.explanation_marathi.slice(0,180)):'')+'</div>';
+  });
+  el("rev-body").innerHTML=h;
+}
+function backFromReview(){ renderResult(); show("view-result"); }
+el("btn-review").addEventListener("click", function(){ renderReview(); show("view-review"); });
+el("btn-back-res").addEventListener("click", backFromReview);
+el("btn-replay").addEventListener("click", function(){ var keep=ST[CUR].best; ST[CUR]=stShape(); ST[CUR].best=keep; saveSt(); startSet(CUR); });
+el("btn-shelf").addEventListener("click", goShelf);
+function goShelf(){ renderShelf(); show("view-shelf"); }
+
+/* ---------- boot ---------- */
+sget("st_v1", function(sv){ ST = sv || {}; 
+  sget("lang", function(lv){ if(lv){ LANG=lv; document.querySelectorAll("#langseg button").forEach(function(x){ x.classList.toggle("on", x.dataset.l===LANG); }); }
+    renderShelf(); show("view-shelf"); }); });
+</script>
+</body>
+</html>
