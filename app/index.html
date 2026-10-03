@@ -95,6 +95,32 @@
   .revq .wa { color: #b03030; text-decoration: line-through; }
   .spinner { color: #fff; text-align: center; padding: 40px 0; font-size: 14px; opacity: .85; }
   .hidden { display: none !important; }
+  /* KBC lifelines */
+  .llrow { display: flex; gap: 8px; margin-bottom: 12px; justify-content: center; }
+  .llbtn {
+    flex: 1; max-width: 104px; border: 2px solid #ffd166; cursor: pointer; text-align: center;
+    background: radial-gradient(circle at 30% 30%, #1f4d99, #102A56);
+    color: #ffd166; font-weight: 800; font-size: 13.5px; border-radius: 999px;
+    padding: 8px 0 7px; box-shadow: 0 4px 12px rgba(0,0,0,.35);
+  }
+  .llbtn small { display: block; font-size: 8.5px; opacity: .85; font-weight: 600; margin-top: 1px; }
+  .llbtn.used { opacity: .3; filter: grayscale(.9); pointer-events: none; }
+  .opt.gone { visibility: hidden; }
+  .llmodal {
+    position: fixed; inset: 0; background: rgba(6,12,26,.74); z-index: 60;
+    display: flex; align-items: center; justify-content: center; padding: 22px;
+  }
+  .llcard {
+    background: #0e2550; border: 2px solid #ffd166; border-radius: 18px; color: #fff;
+    padding: 22px 18px; max-width: 360px; width: 100%; text-align: center;
+    box-shadow: 0 18px 50px rgba(0,0,0,.6);
+  }
+  .llcard h3 { color: #ffd166; font-size: 15px; margin-bottom: 14px; letter-spacing: .4px; }
+  .pollbar { margin: 11px 0; text-align: left; font-size: 13.5px; font-weight: 700; }
+  .pollbar .tr { background: rgba(255,255,255,.15); border-radius: 8px; height: 16px; margin-top: 4px; overflow: hidden; }
+  .pollbar .fl { height: 100%; background: linear-gradient(90deg,#ffd166,#e8a91c); width: 0; border-radius: 8px; transition: width .8s ease; }
+  .bubble { background: rgba(255,255,255,.10); border-radius: 12px; padding: 13px; font-size: 13.5px; line-height: 1.65; text-align: left; }
+  .llclose { margin-top: 16px; background: #ffd166; color: #102A56; border: none; font-weight: 800; font-size: 14px; padding: 10px 26px; border-radius: 999px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -120,6 +146,12 @@
       <button data-l="mr">मराठी</button>
       <button data-l="en">English</button>
     </div>
+    <div class="llrow" id="llrow">
+      <button class="llbtn" id="ll-fifty">50:50<small>दोन चुका काढा</small></button>
+      <button class="llbtn" id="ll-poll">👥<small>Audience Poll</small></button>
+      <button class="llbtn" id="ll-friend">📞<small>Ask Friend</small></button>
+      <button class="llbtn" id="ll-expert">👨‍🏫<small>Expert</small></button>
+    </div>
     <div class="card"><div id="qbody"></div></div>
     <div id="opts"></div>
     <div class="exp" id="exp"></div>
@@ -143,6 +175,7 @@
     <div class="card"><div id="rev-body"></div></div>
     <button class="bigbtn ghost" id="btn-back-res">◀ Back</button>
   </div>
+  <div class="llmodal hidden" id="llmodal"><div class="llcard" id="llcard"></div></div>
 </div>
 
 <script>
@@ -220,6 +253,8 @@ function renderQ(){
   el("exp").style.display="none"; el("exp").textContent="";
   el("btn-next").classList.add("hidden");
   document.querySelectorAll(".opt").forEach(function(b){ b.addEventListener("click", function(){ pick(parseInt(b.dataset.ix)); }); });
+  (REMOVED[CUR+"_"+st.i]||[]).forEach(function(ix){ var b=document.querySelector('.opt[data-ix="'+ix+'"]'); if(b) b.classList.add("gone"); });
+  refreshLL();
 }
 function pick(ix){
   var st = ST[CUR], q = DATA[CUR][st.i], ci = q.correct_index;
@@ -247,6 +282,61 @@ el("btn-next").addEventListener("click", function(){
     st.best = (st.best==null)? pc : Math.max(st.best,pc);
     saveSt(); renderResult(); show("view-result");
   } else { st.i++; saveSt(); renderQ(); }
+});
+
+/* ---------- KBC lifelines (1 use each per run) ---------- */
+var REMOVED = {};
+function llDefaults(){ return {fifty:true,poll:true,friend:true,expert:true}; }
+function llst(){ var st=ST[CUR]; if(!st.ll) st.ll=llDefaults(); return st.ll; }
+function answeredNow(){ return !el("btn-next").classList.contains("hidden"); }
+function refreshLL(){ if(!CUR||!ST[CUR]) return; ["fifty","poll","friend","expert"].forEach(function(k){ el("ll-"+k).classList.toggle("used", !llst()[k]); }); }
+function openLL(html){ el("llcard").innerHTML=html+'<button class="llclose" id="llclose">OK ✔</button>'; el("llmodal").classList.remove("hidden"); el("llclose").addEventListener("click", closeLL); }
+function closeLL(){ el("llmodal").classList.add("hidden"); }
+el("llmodal").addEventListener("click", function(e){ if(e.target===el("llmodal")) closeLL(); });
+
+el("ll-fifty").addEventListener("click", function(){
+  if (!llst().fifty || answeredNow()) return;
+  llst().fifty=false;
+  var st=ST[CUR], ci=DATA[CUR][st.i].correct_index;
+  var wrongs=[0,1,2,3].filter(function(x){return x!==ci;}).sort(function(){return Math.random()-0.5;});
+  REMOVED[CUR+"_"+st.i]=wrongs.slice(1);
+  REMOVED[CUR+"_"+st.i].forEach(function(ix){ var b=document.querySelector('.opt[data-ix="'+ix+'"]'); if(b) b.classList.add("gone"); });
+  saveSt(); refreshLL();
+});
+el("ll-poll").addEventListener("click", function(){
+  if (!llst().poll || answeredNow()) return;
+  llst().poll=false;
+  var ci=DATA[CUR][ST[CUR].i].correct_index, L=["A","B","C","D"], perc=[0,0,0,0], anchor=ci;
+  if (Math.random()<0.15){ var w=[0,1,2,3].filter(function(x){return x!==ci;}); anchor=w[Math.floor(Math.random()*w.length)]; }
+  perc[anchor]=42+Math.floor(Math.random()*26);
+  var rest=100-perc[anchor], others=[0,1,2,3].filter(function(x){return x!==anchor;});
+  var a=Math.floor(rest*(0.25+Math.random()*0.4)), b=Math.floor((rest-a)*Math.random());
+  perc[others[0]]=a; perc[others[1]]=b; perc[others[2]]=rest-a-b;
+  var h='<h3>👥 Audience Poll</h3>';
+  for(var i=0;i<4;i++){ h+='<div class="pollbar">'+L[i]+' — '+perc[i]+'%<div class="tr"><div class="fl" data-w="'+perc[i]+'"></div></div></div>'; }
+  openLL(h);
+  setTimeout(function(){ document.querySelectorAll(".fl").forEach(function(f){ f.style.width=f.dataset.w+"%"; }); },60);
+  saveSt(); refreshLL();
+});
+el("ll-friend").addEventListener("click", function(){
+  if (!llst().friend || answeredNow()) return;
+  llst().friend=false;
+  var ci=DATA[CUR][ST[CUR].i].correct_index, L=["A","B","C","D"], sure=Math.random()<0.8, pk=ci;
+  if(!sure){ var w=[0,1,2,3].filter(function(x){return x!==ci;}); pk=w[Math.floor(Math.random()*w.length)]; }
+  openLL('<h3>📞 Ask a Friend</h3><div class="bubble" id="fr-talk">☎️ ringing… 📶</div>');
+  setTimeout(function(){ var t=el("fr-talk"); if(t) t.innerHTML="मित्र: "+(sure
+     ? 'पूर्ण खात्री नाही, पण माझ्या मते <b>'+L[pk]+')</b> बरोबर आहे 😄<br><span style="opacity:.7">Not 100% sure, but I think it is '+L[pk]+'!</span>'
+     : 'अगं, हा तर अवढड आहे रे… माझा अंदाज <b>'+L[pk]+')</b> 🫣<br><span style="opacity:.7">Tricky one… my guess is '+L[pk]+'</span>'); },1200);
+  saveSt(); refreshLL();
+});
+el("ll-expert").addEventListener("click", function(){
+  if (!llst().expert || answeredNow()) return;
+  llst().expert=false;
+  var q=DATA[CUR][ST[CUR].i], ci=q.correct_index, L=["A","B","C","D"], right=Math.random()<0.95, pk=ci;
+  if(!right){ var w=[0,1,2,3].filter(function(x){return x!==ci;}); pk=w[Math.floor(Math.random()*w.length)]; }
+  var why = (right && q.explanation_marathi) ? esc(q.explanation_marathi.slice(0,140))+"…" : "या प्रश्नात ट्रॅप आहे — काळजीपूर्वक निवडा! (This one hides a trap — choose carefully!)";
+  openLL('<h3>👨‍🏫 Expert Opinion</h3><div class="bubble">उत्तर <b>'+L[pk]+')</b> असावं — असा माझा ठाम अभिप्राय.<br><span style="opacity:.75">I am fairly confident the answer is <b>'+L[pk]+')</b></span><br><br>💡 '+why+'</div>');
+  saveSt(); refreshLL();
 });
 
 /* ---------- lang ---------- */
