@@ -213,6 +213,7 @@
     <div id="shelf-list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
     <a class="bigbtn gold" id="btn-donate-shelf" href="https://drawdrawdraw2025.github.io/pay/">☕ Support Mmindpower ₹5</a>
     <a class="bigbtn yt" id="btn-youtube" href="https://youtube.com/@mmindpower">📺 Subscribe on YouTube — @mmindpower</a>
+    <a class="bigbtn ghost" id="btn-channel" href="https://t.me/mmindpower_1">📣 Also on Telegram — @mmindpower_1</a>
   </div>
 
   <div id="view-quiz" class="hidden">
@@ -259,6 +260,7 @@
     <button class="bigbtn ghost" id="btn-replay">🔁 Replay this set</button>
     <a class="bigbtn gold" id="btn-donate-res" href="https://drawdrawdraw2025.github.io/pay/">☕ Support Mmindpower ₹5</a>
     <button class="bigbtn yt" id="btn-youtube2">📺 Subscribe on YouTube — @mmindpower</button>
+    <button class="bigbtn ghost" id="btn-channel2">📣 Also on Telegram — @mmindpower_1</button>
     <button class="bigbtn ghost" id="btn-shelf">🗂️ All sets</button>
   </div>
 
@@ -331,6 +333,7 @@ function hideMainBtn(){
   if(IN_TG && TG.MainButton){ try{ TG.MainButton.hide(); if(mainCb){ TG.MainButton.offClick(mainCb); mainCb=null; } }catch(e){} } }
 ["btn-donate-shelf","btn-donate-res"].forEach(function(id){ el(id).addEventListener("click", function(e){ e.preventDefault(); openDonate(); }); });
 ["btn-youtube","btn-youtube2"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){ e.preventDefault(); var u="https://youtube.com/@mmindpower"; if(IN_TG && TG.openLink){ TG.openLink(u); } else { window.location.href=u; } }); });
+["btn-channel","btn-channel2"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){ e.preventDefault(); var u="https://t.me/mmindpower_1"; if(IN_TG && TG.openTelegramLink){ TG.openTelegramLink(u); } else { window.location.href=u; } }); });
 if (TG && TG.BackButton){ try{ TG.BackButton.onClick(function(){ if(!el("view-review").classList.contains("hidden")){ backFromReview(); } else { goShelf(); } }); }catch(e){} }
 
 /* ---------- state ---------- */
