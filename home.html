@@ -158,4 +158,53 @@ var ARCHIVE=[
   });
 })();
 </script>
+
+<!-- Tip Jar (owner: PBG / Mmindpower) — earns to mmindpower.contact@oksbi (₹10 UPI) + 100 sats Lightning —
+     gates the 42-set archive below; hub cards above stay free. Honor-system unlock, per-device via localStorage. -->
+<div id="tipjar" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(4,8,20,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px">
+  <div style="width:100%;max-width:420px;background:rgba(17,26,48,.85);border:1px solid rgba(246,196,83,.4);border-radius:24px;padding:26px;box-shadow:0 24px 70px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08);text-align:center;color:#e8ecf8">
+    <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#f6c453,#e8a91c);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;box-shadow:0 8px 26px rgba(232,169,28,.45)">💰</div>
+    <h3 style="font-size:20px;font-weight:900;margin-bottom:6px;background:linear-gradient(135deg,#ffe9a8,#f6c453);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Unlock the Quiz Archive — Tip Jar</h3>
+    <p style="font-size:13px;color:#9aa7c7;margin-bottom:18px;line-height:1.5">Tip <b style="color:#f6c453">₹10 via G-Pay</b> or <b style="color:#f6c453">100 sats via Lightning</b> → unlocks all 42 sets on this device.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <a href="upi://pay?pa=mmindpower.contact@oksbi&pn=Mmindpower&am=10&cu=INR&tn=Mmindpower%20Archive%20Tip" onclick="localStorage.setItem('pbg_paid','gpay');return true" style="padding:14px;border-radius:12px;background:linear-gradient(135deg,#f6c453,#e8a91c);color:#1a1206;text-decoration:none;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 6px 18px rgba(232,169,28,.35)">💳 G-Pay ₹10</a>
+      <a href="lightning:olderreport808@walletofsatoshi.com" onclick="localStorage.setItem('pbg_paid','lightning');localStorage.setItem('pbg_paid_amt','100');return true" style="padding:14px;border-radius:12px;background:rgba(246,196,83,.12);color:#f6c453;text-decoration:none;font-weight:800;font-size:14px;border:1px solid rgba(246,196,83,.45);display:flex;align-items:center;justify-content:center;gap:6px">⚡ 100 sats</a>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button onclick="unlockPaid()" style="flex:1;padding:12px;border-radius:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(34,197,94,.3)">I Paid → Unlock</button>
+      <button onclick="document.getElementById('tipjar').style.display='none'" style="padding:12px 16px;border-radius:12px;background:rgba(255,255,255,.08);color:#e8ecf8;border:1px solid rgba(255,255,255,.14);font-weight:700;cursor:pointer">Later</button>
+    </div>
+    <p style="font-size:11px;color:#5d6a8c;margin-top:12px">UPI <code style="color:#ffd98a">mmindpower.contact@oksbi</code> • Lightning <code style="color:#ffd98a">olderreport808@walletofsatoshi.com</code> • <span id="tj-status" style="color:#4ade80"></span></p>
+  </div>
+</div>
+<script>
+function tjPaid(){ try { return !!localStorage.getItem('pbg_paid'); } catch(e){ return false; } }
+function tjShow(){ document.getElementById('tipjar').style.display='flex'; }
+function unlockPaid(){
+  try { localStorage.setItem('pbg_paid','yes'); } catch(e){}
+  document.getElementById('tipjar').style.display='none';
+  var win=document.getElementById('quizWindow');
+  win.classList.add('expanded');
+  win.querySelector('.hint').innerHTML='👇 Tap a set to open it';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+(function(){
+  var win=document.getElementById('quizWindow');
+  var arch=document.getElementById('arch');
+  // Gate the 2-step reveal: unpaid tap on the archive window → tip jar (keeps hub cards above free)
+  win.addEventListener('click',function(e){
+    if(!tjPaid() && !win.classList.contains('expanded')){
+      e.stopPropagation(); e.preventDefault(); tjShow(); return false;
+    }
+  },true);
+  // Gate individual set taps too (capture fires before their own onclick)
+  arch.addEventListener('click',function(e){
+    if(!tjPaid()){ e.stopPropagation(); e.preventDefault(); tjShow(); return false; }
+  },true);
+  if(tjPaid()){
+    var el=document.getElementById('tj-status');
+    if(el) el.textContent='Unlocked ✓';
+  }
+})();
+</script>
 </body></html>
