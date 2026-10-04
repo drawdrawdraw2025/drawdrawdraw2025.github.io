@@ -3,139 +3,215 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0d1f3c">
+<meta name="theme-color" content="#0a1224">
 <title>Mmindpower 📚 Practice App</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
+  :root {
+    --glass: rgba(255,255,255,.065);
+    --glass-brd: rgba(255,255,255,.13);
+    --gold1: #ffd166; --gold2: #e8a91c;
+    --blue1: #1f4d99; --blue2: #102A56;
+    --ink: #eef3ff; --ink-dim: rgba(238,243,255,.62);
+    --ok: #22c55e; --no: #ef4444;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body {
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background: linear-gradient(160deg, #0d1f3c 0%, #102A56 55%, #1b3a70 100%);
-    min-height: 100vh; color: #16203a; padding: 14px 14px 30px;
+    font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: #070d1c; min-height: 100vh; color: var(--ink);
+    padding: 14px 14px 34px; overflow-x: hidden;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(420px 300px at 85% -5%, rgba(232,169,28,.16), transparent 70%),
+      radial-gradient(520px 420px at -15% 25%, rgba(59,72,180,.30), transparent 70%),
+      radial-gradient(420px 360px at 110% 70%, rgba(16,185,129,.12), transparent 70%),
+      linear-gradient(160deg, #070d1c 0%, #0a1224 45%, #0d1830 100%);
   }
   .wrap { max-width: 520px; margin: 0 auto; }
-  .brand { text-align: center; color: #fff; padding: 14px 0 18px; }
-  .brand h1 { font-size: 22px; letter-spacing: .3px; }
-  .brand .tag { font-size: 12.5px; opacity: .75; margin-top: 3px; }
-  .card {
-    background: #fff; border-radius: 18px; padding: 20px 18px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.35); margin-bottom: 14px;
+  .brand { text-align: center; padding: 16px 0 20px; }
+  .brand h1 {
+    font-size: 24px; letter-spacing: .4px; font-weight: 800;
+    background: linear-gradient(90deg, #fff 20%, var(--gold1) 80%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
   }
+  .brand .tag { font-size: 12px; color: var(--ink-dim); margin-top: 4px; }
+  .card, .setcard, .opt, .exp, .llcard {
+    background: var(--glass); border: 1px solid var(--glass-brd);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  }
+  .card { border-radius: 20px; padding: 20px 18px; margin-bottom: 14px; box-shadow: 0 10px 34px rgba(0,0,0,.4); }
+  .center { text-align: center; }
+  .muted { color: var(--ink-dim); font-size: 13px; }
+  .hidden { display: none !important; }
+
+  /* view transitions */
+  .viewin { animation: vin .28s ease both; }
+  @keyframes vin { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .qin { animation: qin .3s ease both; }
+  @keyframes qin { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
+
   /* shelf */
   .setcard {
-    display: flex; align-items: center; gap: 14px; background: #fff;
-    border-radius: 16px; padding: 16px; margin-bottom: 12px; cursor: pointer;
-    box-shadow: 0 6px 18px rgba(0,0,0,.30); transition: transform .08s ease;
+    display: flex; align-items: center; gap: 14px; border-radius: 18px;
+    padding: 16px; margin-bottom: 12px; cursor: pointer;
+    box-shadow: 0 8px 22px rgba(0,0,0,.35); transition: transform .1s ease, border-color .15s ease;
   }
-  .setcard:active { transform: scale(.98); }
+  .setcard:active { transform: scale(.975); border-color: rgba(255,209,102,.55); }
   .badgeL {
-    width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
-    background: linear-gradient(135deg,#102A56,#1f4d99); color: #fff;
-    font-size: 24px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+    width: 52px; height: 52px; border-radius: 15px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--blue1), var(--blue2));
+    border: 1px solid rgba(255,255,255,.18);
+    color: #fff; font-size: 24px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 16px rgba(31,77,153,.45);
   }
   .setinfo { flex: 1; }
-  .setinfo .nm { font-weight: 700; font-size: 16px; color: #102A56; }
-  .setinfo .sub { font-size: 12px; color: #7a8499; margin-top: 2px; }
-  .pill { font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 999px; }
-  .pill.prog { background: #fff3d6; color: #8a5a00; }
-  .pill.best { background: #d9f2e2; color: #0a7a3d; }
-  /* quiz */
-  .topbar { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .qcount { color: #fff; font-size: 13px; font-weight: 700; white-space: nowrap; }
-  .bar { flex: 1; height: 8px; background: rgba(255,255,255,.22); border-radius: 99px; overflow: hidden; }
-  .bar i { display: block; height: 100%; background: #ffd166; width: 0; border-radius: 99px; transition: width .25s ease; }
-  .seg { display: flex; background: rgba(255,255,255,.16); border-radius: 10px; padding: 3px; gap: 3px; margin-bottom: 12px; }
-  .seg button {
-    flex: 1; border: none; background: transparent; color: #dfe7f5;
-    font-size: 12.5px; font-weight: 700; padding: 7px 0; border-radius: 8px; cursor: pointer;
+  .setinfo .nm { font-weight: 800; font-size: 16.5px; }
+  .setinfo .sub { font-size: 12px; color: var(--ink-dim); margin-top: 2px; }
+  .pill { font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 999px; border: 1px solid transparent; }
+  .pill.prog { background: rgba(255,209,102,.14); color: var(--gold1); border-color: rgba(255,209,102,.35); }
+  .pill.best { background: rgba(34,197,94,.14); color: #4ade80; border-color: rgba(34,197,94,.35); }
+  .skel {
+    height: 84px; border-radius: 18px; margin-bottom: 12px; background: var(--glass);
+    border: 1px solid var(--glass-brd); position: relative; overflow: hidden;
   }
+  .skel::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(100deg, transparent 20%, rgba(255,255,255,.09) 50%, transparent 80%);
+    animation: shim 1.3s infinite; transform: translateX(-100%);
+  }
+  @keyframes shim { to { transform: translateX(100%); } }
+
+  /* buttons */
+  .bigbtn {
+    display: block; width: 100%; border: none; cursor: pointer; text-align: center;
+    font-size: 15.5px; font-weight: 800; padding: 15px; border-radius: 15px;
+    margin-top: 10px; text-decoration: none; transition: transform .08s ease;
+    background: linear-gradient(135deg, var(--blue1), var(--blue2)); color: #fff;
+    border: 1px solid rgba(255,255,255,.16); box-shadow: 0 8px 20px rgba(31,77,153,.35);
+  }
+  .bigbtn:active { transform: scale(.975); }
+  .bigbtn.ghost { background: var(--glass); color: var(--ink); box-shadow: none; border: 1px solid var(--glass-brd); }
+  .bigbtn.gold {
+    background: linear-gradient(135deg, var(--gold2), #b87700); color: #1d1400;
+    border: 1px solid rgba(255,222,130,.6); box-shadow: 0 8px 24px rgba(232,169,28,.35);
+  }
+  .row2 { display: flex; gap: 10px; } .row2 .bigbtn { flex: 1; }
+
+  /* quiz top */
+  .topbar { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .qcount { font-size: 13px; font-weight: 800; white-space: nowrap; color: var(--gold1); }
+  .bar { flex: 1; height: 8px; background: rgba(255,255,255,.14); border-radius: 99px; overflow: hidden; }
+  .bar i {
+    display: block; height: 100%; width: 0; border-radius: 99px;
+    background: linear-gradient(90deg, var(--gold1), var(--gold2));
+    box-shadow: 0 0 12px rgba(255,209,102,.7); transition: width .3s ease;
+  }
+  .seg { display: flex; background: rgba(255,255,255,.10); border: 1px solid var(--glass-brd); border-radius: 12px; padding: 3px; gap: 3px; margin-bottom: 12px; }
+  .seg button { flex: 1; border: none; background: transparent; color: var(--ink-dim); font-size: 12.5px; font-weight: 800; padding: 8px 0; border-radius: 9px; cursor: pointer; }
   .seg button.on { background: #fff; color: #102A56; }
-  .qtext { font-size: 15.5px; line-height: 1.65; white-space: pre-wrap; word-break: break-word; }
+
+  /* lifelines */
+  .llrow { display: flex; gap: 8px; margin: 2px 0 6px; justify-content: center; }
+  .llbtn {
+    flex: 1; max-width: 104px; border-radius: 999px; cursor: pointer; text-align: center;
+    background: radial-gradient(circle at 30% 30%, #24488e, #122a56);
+    border: 2px solid var(--gold1); color: var(--gold1);
+    font-weight: 800; font-size: 13.5px; padding: 8px 0 7px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.4), 0 0 14px rgba(255,209,102,.25) inset;
+    animation: llglow 2.6s ease-in-out infinite;
+  }
+  @keyframes llglow { 0%,100% { box-shadow: 0 4px 14px rgba(0,0,0,.4), 0 0 10px rgba(255,209,102,.18) inset; } 50% { box-shadow: 0 4px 14px rgba(0,0,0,.4), 0 0 22px rgba(255,209,102,.40) inset; } }
+  .llbtn small { display: block; font-size: 8.5px; opacity: .85; font-weight: 600; margin-top: 1px; }
+  .llbtn.used { opacity: .28; filter: grayscale(.9); pointer-events: none; animation: none; }
+  #llhint { text-align: center; font-size: 10px; color: var(--ink-dim); margin-bottom: 12px; }
+
+  /* question */
+  .qtext { font-size: 15.5px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
   .qtext.mr { margin-bottom: 12px; }
-  .qtext.en { color: #46536e; font-size: 14.5px; border-top: 1px dashed #e2e7f0; padding-top: 12px; }
-  .qtext.en:only-child, .qtext.mr:last-child { border-top: none; padding-top: 0; }
+  .qtext.en { color: var(--ink-dim); font-size: 14.5px; border-top: 1px dashed rgba(255,255,255,.16); padding-top: 12px; }
   .tbl { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; overflow-x: auto; }
   .opt {
     display: flex; gap: 12px; align-items: flex-start; width: 100%; text-align: left;
-    background: #f4f6fb; border: 2px solid #e3e8f2; border-radius: 14px;
-    padding: 14px; font-size: 14.5px; line-height: 1.5; margin-bottom: 10px; cursor: pointer;
-    color: #1a2440; transition: border-color .12s ease, background .12s ease;
+    border-radius: 15px; padding: 14px; font-size: 14.5px; line-height: 1.55;
+    margin-bottom: 10px; cursor: pointer; color: var(--ink);
+    border: 1.5px solid var(--glass-brd); transition: border-color .12s ease, background .15s ease, transform .08s ease;
   }
+  .opt:active { transform: scale(.985); }
   .opt .L {
-    font-weight: 800; color: #102A56; background: #e7ecf7; border-radius: 8px;
-    min-width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    font-weight: 800; color: #fff; border-radius: 9px; min-width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--blue1), var(--blue2));
+    border: 1px solid rgba(255,255,255,.18);
   }
-  .opt.sel { border-color: #102A56; }
-  .opt.ok { background: #e3f7ea; border-color: #1f9d4d; }
-  .opt.ok .L { background: #1f9d4d; color: #fff; }
-  .opt.no { background: #fdecec; border-color: #d64545; }
-  .opt.no .L { background: #d64545; color: #fff; }
+  .opt.sel { border-color: var(--gold1); }
+  .opt.ok { background: rgba(34,197,94,.16); border-color: var(--ok); box-shadow: 0 0 18px rgba(34,197,94,.25); }
+  .opt.ok .L { background: var(--ok); }
+  .opt.no { background: rgba(239,68,68,.15); border-color: var(--no); animation: shake .3s ease; }
+  .opt.no .L { background: var(--no); }
+  @keyframes shake { 20%{transform:translateX(-5px)} 45%{transform:translateX(4px)} 70%{transform:translateX(-3px)} 90%{transform:translateX(2px)} }
   .opt.lock { pointer-events: none; }
-  .exp {
-    background: #fff8e8; border: 1px solid #f0dfae; border-radius: 12px;
-    padding: 13px; font-size: 13.5px; line-height: 1.6; color: #5c4a10;
-    margin: 4px 0 12px; display: none; white-space: pre-wrap;
-  }
-  .bigbtn {
-    display: block; width: 100%; border: none; cursor: pointer; text-align: center;
-    background: linear-gradient(135deg,#102A56,#1f4d99); color: #fff;
-    font-size: 16px; font-weight: 700; padding: 15px; border-radius: 14px;
-    box-shadow: 0 6px 18px rgba(16,42,86,.35); margin-top: 6px; text-decoration: none;
-  }
-  .bigbtn.ghost { background: #eef1f7; color: #102A56; box-shadow: none; }
-  .bigbtn.gold { background: linear-gradient(135deg,#c98a00,#e8a91c); }
-  .row2 { display: flex; gap: 10px; }
-  .row2 .bigbtn { flex: 1; }
-  .center { text-align: center; }
-  .bigscore { font-size: 54px; font-weight: 800; color: #102A56; letter-spacing: -2px; }
-  .muted { color: #7a8499; font-size: 13px; }
-  .revq { border-bottom: 1px solid #edf0f6; padding: 12px 0; font-size: 13.5px; line-height: 1.55; }
-  .revq:last-child { border-bottom: none; }
-  .revq .ca { color: #0a7a3d; font-weight: 700; }
-  .revq .wa { color: #b03030; text-decoration: line-through; }
-  .spinner { color: #fff; text-align: center; padding: 40px 0; font-size: 14px; opacity: .85; }
-  .hidden { display: none !important; }
-  /* KBC lifelines */
-  .llrow { display: flex; gap: 8px; margin-bottom: 12px; justify-content: center; }
-  .llbtn {
-    flex: 1; max-width: 104px; border: 2px solid #ffd166; cursor: pointer; text-align: center;
-    background: radial-gradient(circle at 30% 30%, #1f4d99, #102A56);
-    color: #ffd166; font-weight: 800; font-size: 13.5px; border-radius: 999px;
-    padding: 8px 0 7px; box-shadow: 0 4px 12px rgba(0,0,0,.35);
-  }
-  .llbtn small { display: block; font-size: 8.5px; opacity: .85; font-weight: 600; margin-top: 1px; }
-  .llbtn.used { opacity: .3; filter: grayscale(.9); pointer-events: none; }
   .opt.gone { visibility: hidden; }
-  .llmodal {
-    position: fixed; inset: 0; background: rgba(6,12,26,.74); z-index: 60;
-    display: flex; align-items: center; justify-content: center; padding: 22px;
+  .exp {
+    border-radius: 13px; padding: 13px; font-size: 13.5px; line-height: 1.65;
+    color: #ffe9b3; margin: 2px 0 12px; display: none; white-space: pre-wrap;
+    background: rgba(232,169,28,.10); border: 1px solid rgba(232,169,28,.4);
   }
+
+  /* result */
+  .ringwrap { position: relative; width: 150px; margin: 6px auto 10px; }
+  .ringwrap svg { transform: rotate(-90deg); display: block; }
+  .rr-track { stroke: rgba(255,255,255,.12); }
+  .rr-prog { stroke: url(#rg); stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+  .ringval { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+  .bigscore {
+    font-size: 40px; font-weight: 800; letter-spacing: -1px;
+    background: linear-gradient(90deg, #fff, var(--gold1));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .revq { border-bottom: 1px solid rgba(255,255,255,.10); padding: 12px 0; font-size: 13.5px; line-height: 1.6; }
+  .revq:last-child { border-bottom: none; }
+  .revq .ca { color: #4ade80; font-weight: 800; }
+  .revq .wa { color: #f87171; text-decoration: line-through; }
+
+  /* lifeline modal */
+  .llmodal { position: fixed; inset: 0; background: rgba(4,8,18,.78); z-index: 60; display: flex; align-items: center; justify-content: center; padding: 22px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
   .llcard {
-    background: #0e2550; border: 2px solid #ffd166; border-radius: 18px; color: #fff;
-    padding: 22px 18px; max-width: 360px; width: 100%; text-align: center;
-    box-shadow: 0 18px 50px rgba(0,0,0,.6);
+    border-radius: 20px; padding: 24px 20px; max-width: 370px; width: 100%; text-align: center;
+    border: 2px solid var(--gold1); background: rgba(13,27,54,.92);
+    box-shadow: 0 20px 60px rgba(0,0,0,.65), 0 0 40px rgba(255,209,102,.14);
+    animation: pop .22s ease both;
   }
-  .llcard h3 { color: #ffd166; font-size: 15px; margin-bottom: 14px; letter-spacing: .4px; }
-  .pollbar { margin: 11px 0; text-align: left; font-size: 13.5px; font-weight: 700; }
-  .pollbar .tr { background: rgba(255,255,255,.15); border-radius: 8px; height: 16px; margin-top: 4px; overflow: hidden; }
-  .pollbar .fl { height: 100%; background: linear-gradient(90deg,#ffd166,#e8a91c); width: 0; border-radius: 8px; transition: width .8s ease; }
-  .bubble { background: rgba(255,255,255,.10); border-radius: 12px; padding: 13px; font-size: 13.5px; line-height: 1.65; text-align: left; }
-  .llclose { margin-top: 16px; background: #ffd166; color: #102A56; border: none; font-weight: 800; font-size: 14px; padding: 10px 26px; border-radius: 999px; cursor: pointer; }
+  @keyframes pop { from { opacity: 0; transform: scale(.88); } to { opacity: 1; transform: scale(1); } }
+  .llcard h3 { color: var(--gold1); font-size: 16px; margin-bottom: 14px; letter-spacing: .4px; }
+  .pollbar { margin: 11px 0; text-align: left; font-size: 13.5px; font-weight: 800; }
+  .pollbar .tr { background: rgba(255,255,255,.14); border-radius: 8px; height: 16px; margin-top: 4px; overflow: hidden; }
+  .pollbar .fl { height: 100%; background: linear-gradient(90deg, var(--gold1), var(--gold2)); width: 0; border-radius: 8px; box-shadow: 0 0 10px rgba(255,209,102,.6); transition: width .8s ease; }
+  .bubble { background: rgba(255,255,255,.09); border: 1px solid var(--glass-brd); border-radius: 12px; padding: 13px; font-size: 13.5px; line-height: 1.7; text-align: left; }
+  .llclose { margin-top: 16px; background: linear-gradient(135deg,var(--gold1),var(--gold2)); color: #1d1400; border: none; font-weight: 800; font-size: 14px; padding: 10px 26px; border-radius: 999px; cursor: pointer; }
+
+  /* confetti */
+  #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 80; overflow: hidden; }
+  #confetti span { position: absolute; top: -8vh; font-size: 24px; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(118vh) rotate(560deg); } }
+  .spinner { color: var(--ink-dim); text-align: center; padding: 40px 0; font-size: 14px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="brand">
     <h1>🎓 Mmindpower Practice</h1>
-    <div class="tag">MPSC GK • बहुभाषिक • Free forever</div>
+    <div class="tag">MPSC GK • KBC Lifelines 🎰 • बहुभाषिक • Free forever</div>
   </div>
 
-  <div id="view-shelf">
+  <div id="view-shelf" class="viewin">
     <div class="card center muted" id="shelf-note">Pick a set and start practising — progress saves automatically 💾</div>
-    <div id="shelf-list"></div>
+    <div id="shelf-list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
     <a class="bigbtn gold" id="btn-donate-shelf" href="https://drawdrawdraw2025.github.io/pay/">☕ Support Mmindpower ₹5</a>
-    <a class="bigbtn ghost" id="btn-channel" href="https://t.me/mmindpower_1" style="margin-top:10px;">📢 Join Channel — updates @mmindpower_1</a>
-    <a class="bigbtn ghost" id="btn-youtube" href="https://youtube.com/@mmindpower" style="margin-top:10px;">📺 YouTube — @mmindpower</a>
+    <a class="bigbtn ghost" id="btn-channel" href="https://t.me/mmindpower_1">📢 Join Channel — updates @mmindpower_1</a>
+    <a class="bigbtn ghost" id="btn-youtube" href="https://youtube.com/@mmindpower">📺 YouTube — @mmindpower</a>
   </div>
 
   <div id="view-quiz" class="hidden">
@@ -154,8 +230,8 @@
       <button class="llbtn" id="ll-friend">📞<small>Ask Friend</small></button>
       <button class="llbtn" id="ll-expert">👨‍🏫<small>Expert</small></button>
     </div>
-    <div id="llhint" style="text-align:center;font-size:10px;color:rgba(255,255,255,.62);margin:-4px 0 10px;">🔋 lifelines refill after Q10</div>
-    <div class="card"><div id="qbody"></div></div>
+    <div id="llhint">🔋 lifelines refill after Q10</div>
+    <div class="card qin" id="qcard"><div id="qbody"></div></div>
     <div id="opts"></div>
     <div class="exp" id="exp"></div>
     <button class="bigbtn hidden" id="btn-next">Next ▶</button>
@@ -163,9 +239,19 @@
 
   <div id="view-result" class="hidden">
     <div class="card center">
-      <div id="res-emoji" style="font-size:52px">🏆</div>
-      <div class="bigscore" id="res-score">0%</div>
-      <div style="font-weight:700" id="res-line">-</div>
+      <div id="res-emoji" style="font-size:46px">🏆</div>
+      <div class="ringwrap">
+        <svg width="150" height="150">
+          <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffd166"/><stop offset="100%" stop-color="#e8a91c"/>
+          </linearGradient></defs>
+          <circle class="rr-track" cx="75" cy="75" r="64" fill="none" stroke-width="11"/>
+          <circle class="rr-prog" id="rr-prog" cx="75" cy="75" r="64" fill="none" stroke-width="11"
+                  stroke-dasharray="402" stroke-dashoffset="402"/>
+        </svg>
+        <div class="ringval"><div class="bigscore" id="res-score">0%</div></div>
+      </div>
+      <div style="font-weight:800" id="res-line">-</div>
       <div class="muted" style="margin-top:6px" id="res-detail">-</div>
     </div>
     <button class="bigbtn" id="btn-review">🔍 Review mistakes</button>
@@ -179,17 +265,18 @@
     <button class="bigbtn ghost" id="btn-back-res">◀ Back</button>
   </div>
   <div class="llmodal hidden" id="llmodal"><div class="llcard" id="llcard"></div></div>
+  <div id="confetti"></div>
 </div>
 
 <script>
 var TG = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
 var IN_TG = !!(TG && TG.initData);
-if (TG) { try { TG.ready(); TG.expand(); TG.setHeaderColor('#0d1f3c'); TG.setBackgroundColor('#0d1f3c'); } catch(e){} }
+if (TG) { try { TG.ready(); TG.expand(); TG.setHeaderColor('#0a1224'); TG.setBackgroundColor('#070d1c'); } catch(e){} }
 var PAY_URL = "https://drawdrawdraw2025.github.io/pay/";
 var SETS = [ {id:"A", file:"data/set_a.json"}, {id:"B", file:"data/set_b.json"}, {id:"C", file:"data/set_c.json"}, {id:"D", file:"data/set_d.json"}, {id:"E", file:"data/set_e.json"}, {id:"F", file:"data/set_f.json"}, {id:"G", file:"data/set_g.json"}, {id:"H", file:"data/set_h.json"}, {id:"I", file:"data/set_i.json"} ];
 var DATA = {}, ST = {}, LANG = "both", CUR = null;
 
-/* ---------- storage: Telegram CloudStorage + localStorage mirror ---------- */
+/* ---------- storage ---------- */
 function sset(k,v){ var s=JSON.stringify(v);
   try{ localStorage.setItem("mm_"+k,s); }catch(e){}
   if(IN_TG && TG.CloudStorage){ try{ TG.CloudStorage.setItem("mm_"+k,s,function(){}); }catch(e){} } }
@@ -201,12 +288,48 @@ function sget(k,cb){ var loc=null; try{ loc=localStorage.getItem("mm_"+k); }catc
 
 /* ---------- helpers ---------- */
 function el(id){ return document.getElementById(id); }
-function show(v){ ["view-shelf","view-quiz","view-result","view-review"].forEach(function(x){ el(x).classList.toggle("hidden", x!==v); });
+function show(v){ ["view-shelf","view-quiz","view-result","view-review"].forEach(function(x){
+    var n=el(x), on=(x===v);
+    n.classList.toggle("hidden", !on);
+    n.classList.toggle("viewin", on);
+  });
+  hideMainBtn();
   if(TG && TG.BackButton){ try{ if(v==="view-shelf"){TG.BackButton.hide();} else {TG.BackButton.show();} }catch(e){} } }
 function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
 function isTbl(t){ return /\|/.test(t) || /─/.test(t) || /═/.test(t); }
 function openDonate(){ if(IN_TG && TG.openLink){ TG.openLink(PAY_URL); } else { window.location.href = PAY_URL; } }
+function buzz(kind){ if(!(IN_TG && TG.HapticFeedback))return; try{
+  if(kind==="win") TG.HapticFeedback.notificationOccurred("success");
+  else if(kind==="lose") TG.HapticFeedback.notificationOccurred("error");
+  else if(kind==="sel") TG.HapticFeedback.selectionChanged();
+  else TG.HapticFeedback.impactOccurred("light"); }catch(e){} }
+function confetti(){
+  var c=el("confetti"); if(!c) return; c.innerHTML="";
+  var emo=["🎉","✨","🏆","⭐","💛","🔥","🥇"];
+  for(var i=0;i<30;i++){ var s=document.createElement("span");
+    s.textContent=emo[Math.floor(Math.random()*emo.length)];
+    s.style.left=(Math.random()*96)+"%";
+    s.style.fontSize=(16+Math.random()*20)+"px";
+    s.style.animationDuration=(2.1+Math.random()*1.6)+"s";
+    s.style.animationDelay=(Math.random()*0.7)+"s";
+    c.appendChild(s); }
+  setTimeout(function(){ c.innerHTML=""; }, 4600);
+}
+/* MainButton with graceful in-page fallback */
+var mainCb=null;
+function setMainBtn(text, cb){
+  if(IN_TG && TG.MainButton){ try{
+    if(mainCb) TG.MainButton.offClick(mainCb);
+    mainCb=cb; TG.MainButton.onClick(cb);
+    TG.MainButton.setParams({text:text, is_visible:true, color:"#e8a91c", text_color:"#1d1400"});
+    el("btn-next").classList.add("hidden"); return; }catch(e){} }
+  el("btn-next").textContent=text; el("btn-next").classList.remove("hidden");
+}
+function hideMainBtn(){
+  if(IN_TG && TG.MainButton){ try{ TG.MainButton.hide(); if(mainCb){ TG.MainButton.offClick(mainCb); mainCb=null; } }catch(e){} } }
 ["btn-donate-shelf","btn-donate-res"].forEach(function(id){ el(id).addEventListener("click", function(e){ e.preventDefault(); openDonate(); }); });
+el("btn-channel").addEventListener("click", function(e){ e.preventDefault(); var u="https://t.me/mmindpower_1"; if(IN_TG && TG.openTelegramLink){ TG.openTelegramLink(u); } else { window.location.href=u; } });
+el("btn-youtube").addEventListener("click", function(e){ e.preventDefault(); var u="https://youtube.com/@mmindpower"; if(IN_TG && TG.openLink){ TG.openLink(u); } else { window.location.href=u; } });
 if (TG && TG.BackButton){ try{ TG.BackButton.onClick(function(){ if(!el("view-review").classList.contains("hidden")){ backFromReview(); } else { goShelf(); } }); }catch(e){} }
 
 /* ---------- state ---------- */
@@ -223,11 +346,11 @@ function renderShelf(){
     else if (st.i>0){ badge = '<span class="pill prog">▶ '+st.i+'/90</span>'; }
     html += '<div class="setcard" data-set="'+s.id+'"><div class="badgeL">'+s.id+'</div>'+
             '<div class="setinfo"><div class="nm">Set '+s.id+'</div>'+
-            '<div class="sub">90 questions • मराठी + English</div></div>'+badge+'</div>';
+            '<div class="sub">90 questions • मराठी'+(s.id==="E"?'':' + English')+'</div></div>'+badge+'</div>';
   });
   el("shelf-list").innerHTML = html;
   document.querySelectorAll(".setcard").forEach(function(c){
-    c.addEventListener("click", function(){ startSet(c.dataset.set); });
+    c.addEventListener("click", function(){ buzz("sel"); startSet(c.dataset.set); });
   });
 }
 
@@ -235,12 +358,13 @@ function renderShelf(){
 function startSet(id){
   CUR = id;
   if (!ST[id]) ST[id] = stShape();
-  function go(){ if (ST[id].finished) { renderResult(); } else { renderQ(); } show(ST[id].finished?"view-result":"view-quiz"); }
+  function go(){ if (ST[id].finished) { renderResult(); show("view-result"); } else { renderQ(); show("view-quiz"); } }
   if (DATA[id]) { go(); return; }
   el("shelf-note").textContent = "Loading Set "+id+" … ⏳";
+  el("shelf-list").innerHTML = '<div class="skel"></div><div class="skel"></div>';
   fetch("data/set_"+id.toLowerCase()+".json").then(function(r){ return r.json(); }).then(function(j){
     DATA[id]=j; el("shelf-note").textContent="Pick a set and start practising — progress saves automatically 💾"; go();
-  }).catch(function(){ el("shelf-note").textContent="⚠️ Network hiccup — tap the set again."; });
+  }).catch(function(){ el("shelf-note").textContent="⚠️ Network hiccup — tap the set again."; renderShelf(); });
 }
 function renderQ(){
   var st = ST[CUR], q = DATA[CUR][st.i], total = DATA[CUR].length;
@@ -251,12 +375,13 @@ function renderQ(){
   if (LANG!=="mr" && qe){ body += '<div class="qtext en'+(isTbl(qe)?' tbl':'')+'"'+(LANG==="en"?' style="border:none;padding-top:0"':'')+'>'+esc(qe)+'</div>'; }
   else if (LANG==="en" && !qe && qm){ body += '<div class="qtext en'+(isTbl(qm)?' tbl':'')+'" style="border:none;padding-top:0">'+esc(qm)+'<div style="font-size:11px;margin-top:6px;color:#8a93a5">(मराठी-only question 📝)</div></div>'; }
   el("qbody").innerHTML = body;
+  var qc=el("qcard"); qc.classList.remove("qin"); void qc.offsetWidth; qc.classList.add("qin");
   var letters=["A","B","C","D"], oh="";
   (q.options||[]).slice(0,4).forEach(function(o,ix){ oh += '<button class="opt" data-ix="'+ix+'"><span class="L">'+letters[ix]+'</span><span>'+esc(o)+'</span></button>'; });
   el("opts").innerHTML = oh;
   el("exp").style.display="none"; el("exp").textContent="";
-  el("btn-next").classList.add("hidden");
-  document.querySelectorAll(".opt").forEach(function(b){ b.addEventListener("click", function(){ pick(parseInt(b.dataset.ix)); }); });
+  hideMainBtn(); el("btn-next").classList.add("hidden");
+  document.querySelectorAll(".opt").forEach(function(b){ b.addEventListener("click", function(){ buzz("tap"); pick(parseInt(b.dataset.ix)); }); });
   (REMOVED[CUR+"_"+st.i]||[]).forEach(function(ix){ var b=document.querySelector('.opt[data-ix="'+ix+'"]'); if(b) b.classList.add("gone"); });
   var nxt=(Math.floor(st.i/10)+1)*10;
   el("llhint").textContent = (nxt>=total) ? "🔋 final block — no more refills this run" : ("🔋 lifelines refill at Q"+(nxt+1)+" onwards");
@@ -270,17 +395,17 @@ function pick(ix){
     if (bi===ci) b.classList.add("ok");
     else if (bi===ix) b.classList.add("no");
   });
-  if (ix===ci){ st.correct++; } else { st.wrong.push({q: st.i, mine: ix}); }
-  var e = document.getElementById("exp");
+  if (ix===ci){ st.correct++; buzz("win"); } else { st.wrong.push({q: st.i, mine: ix}); buzz("lose"); }
+  var e = el("exp");
   var ex = q.explanation_marathi || "";
   if (ex){ e.textContent = "💡 " + ex; e.style.display="block"; }
   saveSt();
   var total=DATA[CUR].length;
   el("barfill").style.width = ((st.i+1)/total*100)+"%";
-  el("btn-next").textContent = (st.i+1>=total) ? "Finish 🏁" : "Next ▶";
-  el("btn-next").classList.remove("hidden");
+  var done = (st.i+1>=total);
+  setMainBtn(done ? "Finish 🏁" : "Next ▶", goNext);
 }
-el("btn-next").addEventListener("click", function(){
+function goNext(){
   var st=ST[CUR], total=DATA[CUR].length;
   if (st.i+1>=total){
     st.finished = true;
@@ -296,22 +421,23 @@ el("btn-next").addEventListener("click", function(){
       var blkEnd = Math.min(st.i+10, total);
       openLL('<h3>✨ Lifelines Recharged! ✨</h3><div class="bubble" style="text-align:center">सगळ्या लाइफलाइन्स पुन्हा सज्ज! 🔋<br><span style="opacity:.78">All 4 lifelines are back for Q'+(st.i+1)+' – '+blkEnd+' 💪</span></div>');
       setTimeout(closeLL, 2300);
+      buzz("win");
     }
   }
-});
+}
+el("btn-next").addEventListener("click", goNext);
 
-/* ---------- KBC lifelines (1 use each per run) ---------- */
+/* ---------- KBC lifelines ---------- */
 var REMOVED = {};
 function llDefaults(){ return {fifty:true,poll:true,friend:true,expert:true}; }
 function llst(){ var st=ST[CUR]; if(!st.ll) st.ll=llDefaults(); return st.ll; }
-function answeredNow(){ return !el("btn-next").classList.contains("hidden"); }
+function answeredNow(){ return !el("btn-next").classList.contains("hidden") || !!(IN_TG && TG.MainButton && TG.MainButton.isVisible); }
 function refreshLL(){ if(!CUR||!ST[CUR]) return; ["fifty","poll","friend","expert"].forEach(function(k){ el("ll-"+k).classList.toggle("used", !llst()[k]); }); }
 function openLL(html){ el("llcard").innerHTML=html+'<button class="llclose" id="llclose">OK ✔</button>'; el("llmodal").classList.remove("hidden"); el("llclose").addEventListener("click", closeLL); }
 function closeLL(){ el("llmodal").classList.add("hidden"); }
 el("llmodal").addEventListener("click", function(e){ if(e.target===el("llmodal")) closeLL(); });
-
 el("ll-fifty").addEventListener("click", function(){
-  if (!llst().fifty || answeredNow()) return;
+  if (!llst().fifty || answeredNow()) return; buzz("sel");
   llst().fifty=false;
   var st=ST[CUR], ci=DATA[CUR][st.i].correct_index;
   var wrongs=[0,1,2,3].filter(function(x){return x!==ci;}).sort(function(){return Math.random()-0.5;});
@@ -320,7 +446,7 @@ el("ll-fifty").addEventListener("click", function(){
   saveSt(); refreshLL();
 });
 el("ll-poll").addEventListener("click", function(){
-  if (!llst().poll || answeredNow()) return;
+  if (!llst().poll || answeredNow()) return; buzz("sel");
   llst().poll=false;
   var ci=DATA[CUR][ST[CUR].i].correct_index, L=["A","B","C","D"], perc=[0,0,0,0], anchor=ci;
   if (Math.random()<0.15){ var w=[0,1,2,3].filter(function(x){return x!==ci;}); anchor=w[Math.floor(Math.random()*w.length)]; }
@@ -335,7 +461,7 @@ el("ll-poll").addEventListener("click", function(){
   saveSt(); refreshLL();
 });
 el("ll-friend").addEventListener("click", function(){
-  if (!llst().friend || answeredNow()) return;
+  if (!llst().friend || answeredNow()) return; buzz("sel");
   llst().friend=false;
   var ci=DATA[CUR][ST[CUR].i].correct_index, L=["A","B","C","D"], sure=Math.random()<0.8, pk=ci;
   if(!sure){ var w=[0,1,2,3].filter(function(x){return x!==ci;}); pk=w[Math.floor(Math.random()*w.length)]; }
@@ -346,7 +472,7 @@ el("ll-friend").addEventListener("click", function(){
   saveSt(); refreshLL();
 });
 el("ll-expert").addEventListener("click", function(){
-  if (!llst().expert || answeredNow()) return;
+  if (!llst().expert || answeredNow()) return; buzz("sel");
   llst().expert=false;
   var q=DATA[CUR][ST[CUR].i], ci=q.correct_index, L=["A","B","C","D"], right=Math.random()<0.95, pk=ci;
   if(!right){ var w=[0,1,2,3].filter(function(x){return x!==ci;}); pk=w[Math.floor(Math.random()*w.length)]; }
@@ -359,7 +485,7 @@ el("ll-expert").addEventListener("click", function(){
 document.querySelectorAll("#langseg button").forEach(function(b){
   b.addEventListener("click", function(){
     document.querySelectorAll("#langseg button").forEach(function(x){x.classList.remove("on");});
-    b.classList.add("on"); LANG=b.dataset.l; sset("lang",LANG); renderQ();
+    b.classList.add("on"); LANG=b.dataset.l; sset("lang",LANG); buzz("sel"); renderQ();
   });
 });
 
@@ -368,11 +494,14 @@ function renderResult(){
   var st=ST[CUR], total=DATA[CUR].length, pc=Math.round(st.correct/total*100);
   el("res-score").textContent = pc+"%";
   el("res-detail").textContent = "Set "+CUR+" • "+st.correct+"/"+total+" correct • best "+st.best+"%";
+  var C=402, ring=el("rr-prog");
+  ring.style.strokeDashoffset = C; setTimeout(function(){ ring.style.strokeDashoffset = C*(1-pc/100); }, 80);
   var em="🌱", ln="Every master was once a beginner — पुन्हा प्रयत्न!";
   if (pc>=90){ em="🏆"; ln="झक्कास! Outstanding!"; }
   else if (pc>=70){ em="🌟"; ln="खूप छान! Great going!"; }
   else if (pc>=50){ em="💪"; ln="चांगली सुरुवात! Keep pushing!"; }
   el("res-emoji").textContent=em; el("res-line").textContent=ln;
+  if (pc>=90){ confetti(); buzz("win"); }
   el("btn-review").style.display = st.wrong.length? "block":"none";
   el("btn-review").textContent = "🔍 Review "+st.wrong.length+" mistake"+(st.wrong.length===1?"":"s");
 }
@@ -391,14 +520,14 @@ function renderReview(){
   el("rev-body").innerHTML=h;
 }
 function backFromReview(){ renderResult(); show("view-result"); }
-el("btn-review").addEventListener("click", function(){ renderReview(); show("view-review"); });
+el("btn-review").addEventListener("click", function(){ buzz("sel"); renderReview(); show("view-review"); });
 el("btn-back-res").addEventListener("click", backFromReview);
-el("btn-replay").addEventListener("click", function(){ var keep=ST[CUR].best; ST[CUR]=stShape(); ST[CUR].best=keep; saveSt(); startSet(CUR); });
+el("btn-replay").addEventListener("click", function(){ var keep=ST[CUR].best; ST[CUR]=stShape(); ST[CUR].best=keep; saveSt(); buzz("sel"); startSet(CUR); });
 el("btn-shelf").addEventListener("click", goShelf);
 function goShelf(){ renderShelf(); show("view-shelf"); }
 
 /* ---------- boot ---------- */
-sget("st_v1", function(sv){ ST = sv || {}; 
+sget("st_v1", function(sv){ ST = sv || {};
   sget("lang", function(lv){ if(lv){ LANG=lv; document.querySelectorAll("#langseg button").forEach(function(x){ x.classList.toggle("on", x.dataset.l===LANG); }); }
     renderShelf(); show("view-shelf"); }); });
 </script>
