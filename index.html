@@ -3,54 +3,61 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<meta name="theme-color" content="#0a1224">
 <title>तलाठी MPSC 2026 क्विज</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,'Noto Sans Devanagari',Arial,sans-serif;background:#f6f7fb;color:#1a1a1a;line-height:1.6}
-header{background:linear-gradient(135deg,#1a237e,#283593);color:#fff;padding:18px 16px;position:sticky;top:0;z-index:10}
-header h1{font-size:18px;margin-bottom:6px}
-header p{font-size:13px;opacity:.9}
+body{font-family:system-ui,'Noto Sans Devanagari',Arial,sans-serif;background:linear-gradient(180deg,#070d1c 0%,#0a1224 100%);color:#e8ecf8;line-height:1.6;min-height:100vh}
+.aurora{position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+ radial-gradient(1000px 500px at 10% -10%,rgba(108,92,231,.26),transparent 60%),
+ radial-gradient(900px 450px at 110% 10%,rgba(20,184,166,.18),transparent 55%),
+ radial-gradient(800px 600px at 50% 120%,rgba(232,169,28,.12),transparent 60%)}
+header{background:rgba(10,18,36,.82);backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);border-bottom:1px solid rgba(255,255,255,.1);color:#f4f7ff;padding:18px 16px;position:sticky;top:0;z-index:10}
+header h1{font-size:18px;margin-bottom:6px;background:linear-gradient(135deg,#ffe9a8,#f6c453);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+header p{font-size:13px;color:#9aa7c7}
 .set-tabs{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.set-tab{padding:8px 16px;border-radius:20px;border:2px solid #fff;background:transparent;color:#fff;font-weight:700;cursor:pointer;font-size:14px}
-.set-tab.active{background:#fff;color:#1a237e}
-.filters{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.filter-btn{white-space:nowrap;padding:8px 14px;border-radius:20px;border:1px solid #c5cae9;background:#eef0ff;font-size:13px;cursor:pointer;font-weight:600}
-.filter-btn.active{background:#1a237e;color:#fff;border-color:#1a237e}
+.set-tab{padding:8px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#e8ecf8;font-weight:700;cursor:pointer;font-size:14px;transition:all .25s ease}
+.set-tab.active{background:linear-gradient(135deg,#f6c453,#e8a91c);color:#1a1206;border-color:transparent;box-shadow:0 4px 16px rgba(232,169,28,.35)}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;background:rgba(10,18,36,.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
+.filter-btn{white-space:nowrap;padding:8px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#c6d0e6;font-size:13px;cursor:pointer;font-weight:600;transition:all .25s ease}
+.filter-btn.active{background:linear-gradient(135deg,#f6c453,#e8a91c);color:#1a1206;border-color:transparent}
 .container{max-width:860px;margin:0 auto;padding:16px 12px 80px}
-.qcard{background:#fff;border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:5px solid #3949ab}
+.qcard{background:rgba(17,26,48,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1);border-left:5px solid #e8a91c;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 12px 36px rgba(0,0,0,.3);animation:qin .4s ease}
+@keyframes qin{from{opacity:0;transform:translateY(10px)}}
 .qmeta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.badge{font-size:11px;padding:3px 10px;border-radius:12px;background:#e8eaf6;color:#1a237e;font-weight:700}
-.badge.type{background:#fff3e0;color:#e65100}
-.badge.diff{background:#fce4ec;color:#b71c1c}
-.qtext{font-size:15px;margin-bottom:8px}
-.qtext .en{color:#444;font-size:13.5px;margin-top:6px;display:block}
-.opt{display:flex;gap:10px;padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;margin-bottom:8px;cursor:pointer;font-size:14px;background:#fafafa}
-.opt.selected{border-color:#1a237e;background:#e8eaf6}
-.opt-letter{font-weight:800;color:#1a237e;min-width:22px}
-.show-ans{background:#2e7d32;color:#fff;border:none;padding:10px 18px;border-radius:8px;font-weight:700;cursor:pointer;font-size:14px;margin-top:6px}
-.ansbox{display:none;margin-top:12px;padding:12px;border-radius:8px;background:#e8f5e9;border:1px solid #a5d6a7}
+.badge{font-size:11px;padding:3px 10px;border-radius:12px;background:rgba(108,92,231,.18);border:1px solid rgba(108,92,231,.4);color:#c4b5fd;font-weight:700}
+.badge.type{background:rgba(251,146,60,.14);border-color:rgba(251,146,60,.4);color:#fdba74}
+.badge.diff{background:rgba(244,114,182,.14);border-color:rgba(244,114,182,.4);color:#f9a8d4}
+.qtext{font-size:15px;margin-bottom:10px;color:#f4f7ff}
+.qtext .en{color:#9aa7c7;font-size:13.5px;margin-top:6px;display:block}
+.opt{display:flex;gap:10px;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;margin-bottom:8px;cursor:pointer;font-size:14px;background:rgba(255,255,255,.04);transition:all .2s ease}
+.opt:hover{border-color:rgba(246,196,83,.5)}
+.opt.selected{border-color:#f6c453;background:rgba(246,196,83,.14);box-shadow:0 0 14px rgba(232,169,28,.15)}
+.opt-letter{font-weight:800;color:#f6c453;min-width:22px}
+.show-ans{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px;margin-top:6px;box-shadow:0 4px 14px rgba(34,197,94,.3);transition:transform .08s ease}
+.show-ans:active{transform:scale(.97)}
+.ansbox{display:none;margin-top:12px;padding:12px;border-radius:10px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.35)}
 .ansbox.visible{display:block}
-.ansbox .correct{font-weight:800;color:#1b5e20;margin-bottom:6px}
-.ansbox .expl{font-size:14px}
-.ansbox .evi{font-size:12px;color:#666;margin-top:8px;font-style:italic}
-.progress{text-align:center;font-size:13px;color:#555;margin:10px 0}
-.floating-home{position:fixed;top:16px;left:16px;z-index:9999;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.72);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(255,255,255,0.6);border-radius:50%;font-size:24px;text-decoration:none;box-shadow:0 8px 32px rgba(0,0,0,0.12);transition:all .35s cubic-bezier(0.34,1.56,0.64,1);}
-
-.float-up,.float-down{position:fixed;left:16px;z-index:9998;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.18);backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%);border:1px solid rgba(255,255,255,0.18);border-radius:50%;font-size:18px;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,0.08);transition:all .3s ease;opacity:0.45;color:#1a1a1a;cursor:pointer}
-.float-up:hover,.float-down:hover{background:rgba(255,255,255,0.38);opacity:0.92;transform:translateY(-1px) scale(1.06)}
-.float-up{top:80px}.float-down{top:132px}
-
-.floating-home:hover{background:rgba(255,255,255,0.9);transform:translateY(-2px) scale(1.08);}
+.ansbox .correct{font-weight:800;color:#4ade80;margin-bottom:6px}
+.ansbox .expl{font-size:14px;color:#d3dcef}
+.ansbox .evi{font-size:12px;color:#7c89a8;margin-top:8px;font-style:italic}
+.progress{text-align:center;font-size:13px;color:#9aa7c7;margin:10px 0}
+.floating-home{position:fixed;top:auto;bottom:18px;left:16px;z-index:9999;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);border:1px solid rgba(255,255,255,.16);border-radius:50%;font-size:24px;text-decoration:none;box-shadow:0 8px 32px rgba(0,0,0,.35);transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.floating-home:hover{background:rgba(255,255,255,.16);transform:translateY(-2px) scale(1.08)}
+.float-up,.float-down{position:fixed;bottom:18px;z-index:9998;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06);backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%);border:1px solid rgba(255,255,255,.1);border-radius:50%;font-size:18px;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.25);transition:all .3s ease;opacity:.55;color:#e8ecf8;cursor:pointer}
+.float-up:hover,.float-down:hover{background:rgba(255,255,255,.14);opacity:.95;transform:translateY(-1px) scale(1.06)}
+.float-up{right:70px;left:auto}.float-down{right:16px;left:auto}
 </style>
 </head>
 <body>
+<div class="aurora"></div>
 <a href="home.html" class="floating-home" title="Modern Home">🏠</a>
 <a href="#" class="float-up" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" title="Top">⬆</a>
 <a href="#" class="float-down" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});return false;" title="Bottom">⬇</a>
 
 <header>
 <h1>📝 तलाठी MPSC पूर्व परीक्षा 2026 – इंटरॅक्टिव्ह क्विज</h1>
-<p>विभाग 3 ते 8 • प्रत्येकी 15 प्रश्न • एकूण 90 प्रश्न • कठीणता 5/5 • उत्तर डीफॉल्ट लपलेले • v14 split JSON + 🏠</p>
+<p>विभाग 3 ते 8 • प्रत्येकी 15 प्रश्न • एकूण 90 प्रश्न • कठीणता 5/5 • उत्तर डीफॉल्ट लपलेले</p>
 <div class='set-tabs'>
 <button class='set-tab active' data-set='A'>संच A (90 प्रश्न)</button>
 <button class='set-tab' data-set='B'>संच B (90 प्रश्न) – भरपाई संच</button>
@@ -85,7 +92,7 @@ function renderQuiz(){
   var card=document.createElement('div');card.className='qcard';
   var letters=['A','B','C','D'];
   var optsHtml=q.options.map(function(op,i){return '<div class="opt"><span class="opt-letter">'+letters[i]+'.</span><span>'+op.replace(/\n/g,'<br>')+'</span></div>';}).join('');
-  card.innerHTML='<div class="qmeta"><span class="badge">'+sectionNames[q.section]+'</span><span class="badge type">'+(q.qtype||'')+'</span><span class="badge diff">कठीणता 5/5</span><span class="badge" style="background:#f3e5f5;color:#6a1b9a">'+(q.subtopic||'')+'</span></div><div class="qtext"><b>प्रश्न '+(idx+1)+'.</b> '+q.q_marathi.replace(/\n/g,'<br>')+'<span class="en">'+q.q_english.replace(/\n/g,'<br>')+'</span></div><div class="opts">'+optsHtml+'</div><button class="show-ans">उत्तर पहा</button><div class="ansbox"><div class="correct">✅ योग्य उत्तर: '+letters[q.correct_index]+' – '+q.options[q.correct_index]+'</div><div class="expl"><b>स्पष्टीकरण:</b> '+q.explanation_marathi.replace(/\n/g,'<br>')+'</div><div class="evi">पुरावा: '+(q.evidence||'')+'</div></div>';
+  card.innerHTML='<div class="qmeta"><span class="badge">'+sectionNames[q.section]+'</span><span class="badge type">'+(q.qtype||'')+'</span><span class="badge diff">कठीणता 5/5</span><span class="badge">'+(q.subtopic||'')+'</span></div><div class="qtext"><b>प्रश्न '+(idx+1)+'.</b> '+q.q_marathi.replace(/\n/g,'<br>')+'<span class="en">'+q.q_english.replace(/\n/g,'<br>')+'</span></div><div class="opts">'+optsHtml+'</div><button class="show-ans">उत्तर पहा</button><div class="ansbox"><div class="correct">✅ योग्य उत्तर: '+letters[q.correct_index]+' – '+q.options[q.correct_index]+'</div><div class="expl"><b>स्पष्टीकरण:</b> '+q.explanation_marathi.replace(/\n/g,'<br>')+'</div><div class="evi">पुरावा: '+(q.evidence||'')+'</div></div>';
   quizEl.appendChild(card);
   var btn=card.querySelector('.show-ans');var box=card.querySelector('.ansbox');
   btn.onclick=function(){box.classList.toggle('visible');btn.textContent=box.classList.contains('visible')?'उत्तर लपवा':'उत्तर पहा';};

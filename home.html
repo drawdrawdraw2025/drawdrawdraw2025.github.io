@@ -1,230 +1,161 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Home</title>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a1224">
+<title>Mmindpower — Home</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fbfaf8;color:#0f0f12;padding:20px}
-.bg-mesh{position:fixed;inset:0;z-index:-2;background:radial-gradient(at 20% 20%,#a78bfa 0%,transparent 50%),radial-gradient(at 80% 20%,#f472b6 0%,transparent 50%),radial-gradient(at 40% 80%,#4ecdc4 0%,transparent 50%),#fbfaf8}
-.bg-blur{position:fixed;inset:0;z-index:-1;backdrop-filter:blur(40px);background:rgba(251,250,248,0.6)}
-.floating-home{position:fixed;top:16px;left:16px;z-index:9999;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.72);backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(255,255,255,0.6);border-radius:50%;font-size:24px;text-decoration:none;box-shadow:0 8px 32px rgba(0,0,0,0.12)}
-h1{font-size:clamp(32px,6vw,56px);line-height:1.05;letter-spacing:-.03em;font-weight:900;text-align:center;margin-bottom:10px}
-h1 span{background:linear-gradient(135deg,#6c5ce7,#ff6b6b,#ffe66d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sub{font-size:17px;opacity:.6;text-align:center;max-width:480px;margin-bottom:32px;line-height:1.5}
-.quiz-window{width:100%;max-width:560px;background:linear-gradient(135deg,rgba(108,92,231,.92),rgba(255,107,107,.88));border-radius:28px;padding:28px;border:1px solid rgba(255,255,255,.5);box-shadow:0 20px 60px rgba(0,0,0,.15);cursor:pointer;transition:all .45s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
-.quiz-window:hover{transform:translateY(-4px) scale(1.01)}
-.q-icon{width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:14px}
-.quiz-window h3{font-size:24px;font-weight:800;margin-bottom:6px;color:#fff}
-.quiz-window p{font-size:15px;opacity:.9;color:#fff;line-height:1.4}
-.hint{margin-top:12px;font-size:13px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:6px}
-.hint .dot{width:6px;height:6px;background:#fff;border-radius:50%;animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.second-layer{max-height:0;opacity:0;overflow:hidden;transition:all .5s cubic-bezier(.34,1.56,.64,1);margin-top:0}
-.quiz-window.expanded .second-layer{max-height:7600px;opacity:1;margin-top:20px}
-.divider{height:1px;background:rgba(255,255,255,.3);margin:16px 0}
-.quiz-title{padding:14px 18px;border-radius:14px;background:rgba(255,255,255,.92);color:#1a1a1a;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;cursor:pointer;transform:translateY(10px);opacity:0;transition:all .4s ease;box-shadow:0 4px 20px rgba(0,0,0,.1)}
-.quiz-window.expanded .quiz-title{transform:translateY(0);opacity:1}
-.quiz-title:nth-child(2){transition-delay:.08s}
-.quiz-title:nth-child(3){transition-delay:.16s}
-.quiz-title:nth-child(4){transition-delay:.24s}
-.quiz-title:nth-child(5){transition-delay:.32s}
-.quiz-title:nth-child(6){transition-delay:.40s}
-.quiz-title:nth-child(7){transition-delay:.48s}
-.quiz-title:nth-child(8){transition-delay:.56s}
-.quiz-title:nth-child(9){transition-delay:.64s}
-.quiz-title:nth-child(10){transition-delay:.72s}
-.quiz-title:nth-child(11){transition-delay:.80s}
-.quiz-title:nth-child(12){transition-delay:.88s}
-.quiz-title:nth-child(13){transition-delay:.96s}
-.quiz-title:nth-child(14){transition-delay:1.04s}
-.quiz-title:nth-child(15){transition-delay:1.12s}
-.quiz-title:nth-child(16){transition-delay:1.20s}
-.quiz-title:nth-child(17){transition-delay:1.28s}
-.quiz-title:nth-child(18){transition-delay:1.36s}
-.quiz-title:nth-child(19){transition-delay:1.44s}
-.quiz-title:nth-child(20){transition-delay:1.52s}
-.quiz-title:nth-child(21){transition-delay:1.60s}
-.quiz-title:nth-child(22){transition-delay:1.68s}
-.quiz-title:nth-child(23){transition-delay:1.76s}
-.quiz-title:nth-child(24){transition-delay:1.84s}
-.quiz-title:nth-child(25){transition-delay:1.92s}
-.quiz-title:nth-child(26){transition-delay:2.00s}
-.quiz-title:nth-child(27){transition-delay:2.08s}
-.quiz-title:nth-child(28){transition-delay:2.16s}
-.quiz-title:nth-child(29){transition-delay:2.24s}
-.quiz-title:nth-child(30){transition-delay:2.32s}
-.quiz-title:nth-child(31){transition-delay:2.40s}
-.quiz-title:nth-child(32){transition-delay:2.48s}
-.quiz-title:nth-child(33){transition-delay:2.56s}
-.quiz-title:nth-child(34){transition-delay:2.64s}
-.quiz-title:nth-child(35){transition-delay:2.72s}
-.quiz-title:nth-child(36){transition-delay:2.80s}
-.quiz-title:nth-child(37){transition-delay:2.88s}
-.quiz-title:nth-child(38){transition-delay:2.96s}
-.quiz-title:nth-child(39){transition-delay:3.04s}
-.quiz-title:nth-child(40){transition-delay:3.12s}
-.quiz-title:nth-child(41){transition-delay:3.20s}
-.quiz-title:nth-child(42){transition-delay:3.28s}
-.quiz-title:hover{background:#fff;transform:translateY(-2px) scale(1.02)}
-.quiz-title.hidden-quiz{background:linear-gradient(135deg,#ffe66d,#ff9f1c);color:#1a1a1a}
-.quiz-title.quiz4{background:linear-gradient(135deg,#4ecdc4,#44a08d);color:#fff}
-.quiz-title.quiz5{background:linear-gradient(135deg,#a78bfa,#6c5ce7);color:#fff;border:2px solid #fff}
-.quiz-title.quiz6{background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:#fff;border:2px solid #fff}
-.quiz-title.quiz7{background:linear-gradient(135deg,#00b894,#0984e3);color:#fff;border:2px solid #fff}
-.quiz-title.quiz8{background:linear-gradient(135deg,#fdcb6e,#e17055);color:#fff;border:2px solid #fff}
-.quiz-title.quiz9{background:linear-gradient(135deg,#00cec9,#6c5ce7);color:#fff;border:2px solid #fff}
-.quiz-title.quiz10{background:linear-gradient(135deg,#ff7675,#fd79a8);color:#fff;border:2px solid #fff}
-.quiz-title.quiz11{background:linear-gradient(135deg,#55efc4,#00b894);color:#fff;border:2px solid #fff}
-.quiz-title.quiz12{background:linear-gradient(135deg,#a29bfe,#6c5ce7);color:#fff;border:2px solid #fff}
-.quiz-title.quiz13{background:linear-gradient(135deg,#fd79a8,#e84393);color:#fff;border:2px solid #fff}
-.quiz-title.quiz14{background:linear-gradient(135deg,#00cec9,#0984e3);color:#fff;border:2px solid #fff}
-.quiz-title.quiz15{background:linear-gradient(135deg,#fdcb6e,#e17055);color:#fff;border:2px solid #fff}
-.quiz-title.quiz16{background:linear-gradient(135deg,#a29bfe,#6c5ce7);color:#fff;border:2px solid #fff}
-.quiz-title.quiz17{background:linear-gradient(135deg,#55efc4,#00b894);color:#fff;border:2px solid #fff}
-.quiz-title.quiz18{background:linear-gradient(135deg,#81ecec,#0984e3);color:#fff;border:2px solid #fff}
-.quiz-title.quiz19{background:linear-gradient(135deg,#fab1a0,#ff7675);color:#fff;border:2px solid #fff}
-.quiz-title.quiz20{background:linear-gradient(135deg,#74b9ff,#0984e3);color:#fff;border:2px solid #fff}
-.quiz-title.quiz21{background:linear-gradient(135deg,#a29bfe,#6c5ce7);color:#fff;border:2px solid #fff}
-.quiz-title.quiz22{background:linear-gradient(135deg,#00cec9,#6c5ce7);color:#fff;border:2px solid #fff}
-.quiz-title.quiz23{background:linear-gradient(135deg,#55efc4,#00b894);color:#fff;border:2px solid #fff}
-.quiz-title.quiz24{background:linear-gradient(135deg,#81ecec,#0984e3);color:#fff;border:2px solid #fff}
-.quiz-title.quiz25{background:linear-gradient(135deg,#fab1a0,#e17055);color:#fff;border:2px solid #fff}
-.quiz-title.quiz26{background:linear-gradient(135deg,#74b9ff,#a29bfe);color:#fff;border:2px solid #fff}
-.quiz-title.quiz27{background:linear-gradient(135deg,#fdcb6e,#e17055);color:#fff;border:2px solid #fff}
-.quiz-title.quiz28{background:linear-gradient(135deg,#55efc4,#0984e3);color:#fff;border:2px solid #fff}
-.quiz-title.quiz29{background:linear-gradient(135deg,#fab1a0,#e17055);color:#fff;border:2px solid #fff}
-.quiz-title.quiz30{background:linear-gradient(135deg,#00cec9,#0984e3);color:#fff;border:2px solid #fff}
-.quiz-title.quiz31{background:linear-gradient(135deg,#fd79a8,#e84393);color:#fff;border:2px solid #fff}
-.quiz-title.quiz32{background:linear-gradient(135deg,#ffeaa7,#fdcb6e);color:#1a1a1a;border:2px solid #fff}
-.quiz-title.quiz33{background:linear-gradient(135deg,#a29bfe,#0984e3);color:#fff;border:2px solid #fff}
-.quiz-title.quiz34{background:linear-gradient(135deg,#55efc4,#00b894);color:#fff;border:2px solid #fff}
-.quiz-title.quiz35{background:linear-gradient(135deg,#fab1a0,#ff7675);color:#fff;border:2px solid #fff}
-.quiz-title.quiz36{background:linear-gradient(135deg,#81ecec,#00cec9);color:#1a1a1a;border:2px solid #fff}
-.quiz-title.quiz37{background:linear-gradient(135deg,#fdcb6e,#e17055);color:#fff;border:2px solid #fff}
-.quiz-title.quiz38{background:linear-gradient(135deg,#74b9ff,#0984e3);color:#fff;border:2px solid #fff}
-.quiz-title.quiz39{background:linear-gradient(135deg,#a29bfe,#6c5ce7);color:#fff;border:2px solid #fff}
-.quiz-title.quiz40{background:linear-gradient(135deg,#55efc4,#00b894);color:#fff;border:2px solid #fff}
-.quiz-title.quiz41{background:linear-gradient(135deg,#fd79a8,#e84393);color:#fff;border:2px solid #fff}
-.quiz-title.quiz42{background:linear-gradient(135deg,#ff7675,#d63031);color:#fff;border:2px solid #fff}
-
-.float-up,.float-down{position:fixed;left:16px;z-index:9998;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.18);backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%);border:1px solid rgba(255,255,255,0.18);border-radius:50%;font-size:18px;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,0.08);transition:all .3s ease;opacity:0.45;color:#1a1a1a;cursor:pointer}
-.float-up:hover,.float-down:hover{background:rgba(255,255,255,0.38);opacity:0.92;transform:translateY(-1px) scale(1.06)}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,'Noto Sans Devanagari',sans-serif;min-height:100vh;background:linear-gradient(180deg,#070d1c 0%,#0a1224 100%);color:#e8ecf8;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.aurora{position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+ radial-gradient(1200px 600px at 15% -10%,rgba(108,92,231,.30),transparent 60%),
+ radial-gradient(1000px 520px at 110% 15%,rgba(20,184,166,.22),transparent 55%),
+ radial-gradient(900px 700px at 50% 125%,rgba(232,169,28,.16),transparent 60%)}
+.floating-home{position:fixed;top:16px;left:16px;z-index:9999;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);border:1px solid rgba(255,255,255,.16);border-radius:50%;font-size:24px;text-decoration:none;box-shadow:0 8px 32px rgba(0,0,0,.35);transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.floating-home:hover{background:rgba(255,255,255,.16);transform:translateY(-2px) scale(1.08)}
+.float-up,.float-down{position:fixed;left:16px;z-index:9998;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06);backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%);border:1px solid rgba(255,255,255,.1);border-radius:50%;font-size:18px;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.25);transition:all .3s ease;opacity:.55;color:#e8ecf8;cursor:pointer}
+.float-up:hover,.float-down:hover{background:rgba(255,255,255,.14);opacity:.95;transform:translateY(-1px) scale(1.06)}
 .float-up{top:80px}.float-down{top:132px}
-
+h1{font-size:clamp(32px,6vw,56px);line-height:1.05;letter-spacing:-.03em;font-weight:900;text-align:center;margin-bottom:10px;margin-top:24px}
+h1 span{background:linear-gradient(135deg,#ffe9a8,#f6c453 45%,#e8a91c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{font-size:16px;color:#9aa7c7;text-align:center;max-width:520px;margin-bottom:26px;line-height:1.55}
+.hub{width:100%;max-width:560px;display:flex;flex-direction:column;gap:14px}
+.card{background:rgba(17,26,48,.72);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:18px 20px;display:flex;align-items:center;gap:14px;text-decoration:none;color:#e8ecf8;box-shadow:0 18px 50px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.07);transition:all .35s cubic-bezier(.34,1.56,.64,1);cursor:pointer}
+.card:hover{transform:translateY(-3px);border-color:rgba(246,196,83,.45);box-shadow:0 22px 60px rgba(0,0,0,.45),0 0 28px rgba(232,169,28,.12),inset 0 1px 0 rgba(255,255,255,.07)}
+.card .ic{width:50px;height:50px;flex-shrink:0;border-radius:15px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:25px}
+.card .tt{font-size:16.5px;font-weight:800;letter-spacing:-.01em}
+.card .dd{font-size:13px;color:#9aa7c7;margin-top:2px;line-height:1.4}
+.card .go{margin-left:auto;color:#f6c453;font-weight:900;font-size:18px;flex-shrink:0}
+.card.gold{border-color:rgba(246,196,83,.55);background:linear-gradient(135deg,rgba(246,196,83,.16),rgba(232,169,28,.07)),rgba(17,26,48,.72)}
+.card.gold .ic{background:linear-gradient(135deg,#f6c453,#e8a91c);border:none;box-shadow:0 6px 20px rgba(232,169,28,.45)}
+.card.gold .tt{background:linear-gradient(135deg,#ffe9a8,#f6c453);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.quiz-window{width:100%;max-width:560px;background:rgba(17,26,48,.72);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:22px;cursor:pointer;transition:all .45s cubic-bezier(.34,1.56,.64,1);box-shadow:0 18px 50px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.07);margin-top:6px}
+.quiz-window:hover{border-color:rgba(255,255,255,.25)}
+.qw-head{display:flex;align-items:center;gap:14px}
+.q-icon{width:50px;height:50px;flex-shrink:0;border-radius:15px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:25px}
+.quiz-window h3{font-size:19px;font-weight:800;color:#f4f7ff}
+.quiz-window p{font-size:13px;color:#9aa7c7;line-height:1.4;margin-top:2px}
+.hint{margin-top:14px;font-size:13px;color:#f6c453;display:flex;align-items:center;gap:8px}
+.hint .dot{width:7px;height:7px;background:#f6c453;border-radius:50%;box-shadow:0 0 10px #f6c453;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.second-layer{max-height:0;opacity:0;overflow:hidden;transition:all .5s cubic-bezier(.34,1.56,.64,1)}
+.quiz-window.expanded .second-layer{max-height:7600px;opacity:1;margin-top:14px}
+.divider{height:1px;background:rgba(255,255,255,.1);margin:6px 0 14px}
+.quiz-title{padding:13px 16px;border-radius:14px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);color:#e8ecf8;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;font-size:13.5px;cursor:pointer;transform:translateY(10px);opacity:0;transition:all .4s ease;box-shadow:0 4px 18px rgba(0,0,0,.2)}
+.quiz-window.expanded .quiz-title{transform:translateY(0);opacity:1}
+.quiz-title:hover{background:rgba(246,196,83,.14);border-color:rgba(246,196,83,.5);transform:translateY(-2px)}
+.quiz-title .arr{color:#f6c453;font-weight:900;flex-shrink:0}
+.foot{margin-top:30px;font-size:12.5px;color:#5d6a8c;text-align:center;line-height:1.7}
+.foot b{color:#f6c453;font-weight:700}
 </style></head><body>
-<div class="bg-mesh"></div><div class="bg-blur"></div>
-<a href="index.html" class="floating-home">🏠</a>
+<div class="aurora"></div>
+<a href="index.html" class="floating-home" title="Practice Sets A+B">🏠</a>
 <a href="#" class="float-up" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" title="Top">⬆</a>
 <a href="#" class="float-down" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});return false;" title="Bottom">⬇</a>
 
-<h1>Welcome to <span>drawdrawdraw2025</span></h1>
-<p class="sub">Tap quiz window → reveal quizzes → tap title to open</p>
-<div class="quiz-window" id="quizWindow">
-<div class="q-icon">📝</div>
-<h3>MPSC Quiz Hub</h3>
-<p>3630 + 90 Questions • 42 Sets • 2-step open</p>
-<div class="hint"><span class="dot"></span> Click to reveal</div>
-<div class="second-layer">
-<div class="divider"></div>
-<div class="quiz-title" onclick="event.stopPropagation(); location.href='index.html'"><span>📝 Set A+B - 180 Qs</span><span>→</span></div>
-<div class="quiz-title hidden-quiz" onclick="event.stopPropagation(); location.href='quiz2.html'"><span>📚 Set C - 90 Qs (Old)</span><span>→</span></div>
-<div class="quiz-title quiz4" onclick="event.stopPropagation(); location.href='quiz3.html'"><span>🚀 Set D - 90 Qs - 4th</span><span>→</span></div>
-<div class="quiz-title quiz5" onclick="event.stopPropagation(); location.href='quiz4.html'"><span>🔥 Set E - 90 Qs - 5th</span><span>→</span></div>
-<div class="quiz-title quiz6" onclick="event.stopPropagation(); location.href='quiz5.html'"><span>⚡ Set F - 90 Qs - 6th</span><span>→</span></div>
-<div class="quiz-title quiz7" onclick="event.stopPropagation(); location.href='quiz6.html'"><span>💎 Set G - 90 Qs - 7th</span><span>→</span></div>
-<div class="quiz-title quiz8" onclick="event.stopPropagation(); location.href='quiz7.html'"><span>🌟 Set H - 90 Qs - 8th (New as-is)</span><span>→</span></div>
-<div class="quiz-title quiz9" onclick="event.stopPropagation(); location.href='quiz8.html'"><span>🔥 Set O - 90 Qs - 9th (New)</span><span>→</span></div>
-<div class="quiz-title quiz11" onclick="event.stopPropagation(); location.href='quiz10.html'"><span>🧠 Set M - 90 Qs - 10th (New)</span><span>→</span></div>
-<div class="quiz-title quiz12" onclick="event.stopPropagation(); location.href='quiz11.html'"><span>🚀 Set L - 90 Qs - 11th (New)</span><span>→</span></div>
-<div class="quiz-title quiz10" onclick="event.stopPropagation(); location.href='quiz9.html'"><span>📘 Set I - 90 Qs - 12th (New from 9.html - SIR Bihar) - Fills I gap</span><span>→</span></div>
-<div class="quiz-title quiz13" onclick="event.stopPropagation(); location.href='quiz13.html'"><span>⚖️ Set J - 90 Qs - 13th (New from 27.html - Finance Commission 16th)</span><span>→</span></div>
-<div class="quiz-title quiz14" onclick="event.stopPropagation(); location.href='quiz14.html'"><span>🌦️ Set K - 90 Qs - 14th (New from 26.html - Mission Mausam / PM E-DRIVE)</span><span>→</span></div>
-<div class="quiz-title quiz15" onclick="event.stopPropagation(); location.href='quiz15.html'"><span>🔄 Set N - 90 Qs - 15th (Restored from 25.html - Finance Commission / GSTAT)</span><span>→</span></div>
-<div class="quiz-title quiz16" onclick="event.stopPropagation(); location.href='quiz16.html'"><span>🛰️ Set P - 90 Qs - 16th (New from 24.html - Axiom-4 / Sports Board)</span><span>→</span></div>
-<div class="quiz-title quiz17" onclick="event.stopPropagation(); location.href='quiz17.html'"><span>⚓ Set Q - 90 Qs - 17th (New from 23.html - Vadhavan Port 76,220cr)</span><span>→</span></div>
-<div class="quiz-title quiz18" onclick="event.stopPropagation(); location.href='quiz18.html'"><span>🌧️ Set R - 90 Qs - 18th (New from 21.html - Mission Mausam/PM E-DRIVE/NCMM)</span><span>→</span></div>
-<div class="quiz-title quiz19" onclick="event.stopPropagation(); location.href='quiz19.html'"><span>🌾 Set S - 90 Qs - 19th (New from 20.html - PM-KISAN/AMRUT/SVANidhi)</span><span>→</span></div>
-<div class="quiz-title quiz20" onclick="event.stopPropagation(); location.href='quiz20.html'"><span>💳 Set T - 90 Qs - 20th (New from 19.html - PMJDY/MUDRA/PMAY/Jal Jeevan)</span><span>→</span></div>
-<div class="quiz-title quiz21" onclick="event.stopPropagation(); location.href='quiz21.html'"><span>🚀 Set U - 90 Qs - 21st (New from 18.html - Axiom-4 ISS/Sahkar/Critical Minerals)</span><span>→</span></div>
-<div class="quiz-title quiz22" onclick="event.stopPropagation(); location.href='quiz22.html'"><span>🌐 Set V - 90 Qs - 22nd (New from 17.html - BRICS 2026/COP31/FIFA 48)</span><span>→</span></div>
-<div class="quiz-title quiz23" onclick="event.stopPropagation(); location.href='quiz23.html'"><span>🤖 Set W - 90 Qs - 23rd (New from 16.html - BharatGen AI/India AI Summit/Semicon)</span><span>→</span></div>
-<div class="quiz-title quiz24" onclick="event.stopPropagation(); location.href='quiz24.html'"><span>🏝️ Set X - 90 Qs - 24th (New from 15.html - Great Nicobar ICTT/Henley Passport)</span><span>→</span></div>
-<div class="quiz-title quiz25" onclick="event.stopPropagation(); location.href='quiz25.html'"><span>🐯 Set Y - 90 Qs - 25th (New from 14.html - Tiger Estimation 3167/Exports)</span><span>→</span></div>
-<div class="quiz-title quiz26" onclick="event.stopPropagation(); location.href='quiz26.html'"><span>📅 Set Z - 90 Qs - 26th (Daily Set - Ramsar 96/Tata Semicon Assam)</span><span>→</span></div>
-<div class="quiz-title quiz27" onclick="event.stopPropagation(); location.href='quiz27.html'"><span>📜 Set AA - 30 Qs - 27th (Theme1 - Yadava Kalegaon/Tamasha/Women Orgs)</span><span>→</span></div>
-<div class="quiz-title quiz28" onclick="event.stopPropagation(); location.href='quiz28.html'"><span>🌉 Set AB - 90 Qs - 28th (Chenab Bridge/8th Pay/Vizhinjam/Z-Morh)</span><span>→</span></div>
-<div class="quiz-title quiz29" onclick="event.stopPropagation(); location.href='quiz29.html'"><span>📖 Set AC - 90 Qs - 29th (Theme2 - Epigraphy/Hatigumpha/Kharavela)</span><span>→</span></div>
-<div class="quiz-title quiz30" onclick="event.stopPropagation(); location.href='quiz30.html'"><span>🎯 Set AD - 90 Qs - 30th (Set U - Op Sindoor/Bahmani/Rivers/Green Revolution)</span><span>→</span></div>
-<div class="quiz-title quiz31" onclick="event.stopPropagation(); location.href='quiz31.html'"><span>🏛️ Set AE - 90 Qs - 31st (Set V - Pratihara/Pala/Tarain/Lac Operon)</span><span>→</span></div>
-<div class="quiz-title quiz32" onclick="event.stopPropagation(); location.href='quiz32.html'"><span>📰 Set AF - 30 Qs - 32nd (Theme1 24Sep - Darpan 1832/Leelacharitra/Modi/Sohgaura)</span><span>→</span></div>
-<div class="quiz-title quiz33" onclick="event.stopPropagation(); location.href='quiz33.html'"><span>🏏 Set AG - 90 Qs - 33rd (Set W - 84th Amend/Op Brahma/Champions Trophy/Atal Setu)</span><span>→</span></div>
-<div class="quiz-title quiz34" onclick="event.stopPropagation(); location.href='quiz34.html'"><span>🌾 Set AH - 90 Qs - 34th (Sep 2026 - Krishi Sankalp/Asian Games Aichi/SEMICON/DRDO Laser)</span><span>→</span></div>
-<div class="quiz-title quiz35" onclick="event.stopPropagation(); location.href='quiz35.html'"><span>🌍 Set AI - 90 Qs - 35th (Set Y 26Sep - PBD Bhubaneswar/Waqf UMEED/8th Pay/Ramsar crono)</span><span>→</span></div>
-<div class="quiz-title quiz36" onclick="event.stopPropagation(); location.href='quiz36.html'"><span>⚡ Set AJ - 90 Qs - 36th (Kishau Project/Yudh Abhyas/WCEF Gandhinagar/FDI $94.5bn/ISM 2.0)</span><span>→</span></div>
-<div class="quiz-title quiz37" onclick="event.stopPropagation(); location.href='quiz37.html'"><span>📊 Set AK - 90 Qs - 37th (Set AB - SDG Index/GDP 6.5%/Lion Census 891/16th FC)</span><span>→</span></div>
-<div class="quiz-title quiz38" onclick="event.stopPropagation(); location.href='quiz38.html'"><span>🛡️ Set AL - 90 Qs - 38th (Set AC - Sep2026/MERCOSUR/GIFT/SLINEX-26/DRDO Laser/Moody's 7%)</span><span>→</span></div>
-<div class="quiz-title quiz39" onclick="event.stopPropagation(); location.href='quiz39.html'"><span>💰 Set AM - 90 Qs - 39th (Group-B - Budget 26-27 FRBM/G20 BRICS/ISRO/UPI vs CBDC/Green H2)</span><span>→</span></div>
-<div class="quiz-title quiz40" onclick="event.stopPropagation(); location.href='quiz40.html'"><span>📇 Set AN - 90 Qs - 40th (Census 2027/Waqf 2025/ONOE Kovind/UCC UKhand/Quantum/IndiaAI/Surya Ghar)</span><span>→</span></div>
-<div class="quiz-title quiz41" onclick="event.stopPropagation(); location.href='quiz41.html'"><span>📇 Set AO - 90 Qs - 41st (18th LS Arithmetic/PM-JAY 70+/8th Pay Comm/Drone Didi/Nobel 2024/Champions Trophy/SVAMITVA)</span><span>→</span></div>
-<div class="quiz-title quiz42" onclick="event.stopPropagation(); location.href='quiz42.html'"><span>📇 Set AP - 90 Qs - 42nd (ONOE Kovind/Waqf UMEED/Maha Kumbh/Maratha UNESCO/IT Act 2025/PM E-DRIVE/Critical Minerals/ONOS)</span><span>→</span></div>
-</div>
-</div>
-<script>
-const win=document.getElementById('quizWindow');let exp=false;
-win.addEventListener('click',()=>{if(!exp){win.classList.add('expanded');exp=true;win.querySelector('.hint').innerHTML='👇 Tap title to open quiz';}});
-</script>
+<h1>🏆 <span>Mmindpower</span></h1>
+<p class="sub">MPSC • Talathi 2026 — Daily KBC-style quiz, lifelines, AI doubt-solving<br>मराठी + English · free forever 🎓</p>
 
-<!-- Tip Jar Paywall - as agent for PBG - earns to metaforcecrore@okicici + olderreport808@walletofsatoshi.com -->
-<div id="paywall" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(15,15,18,0.92);backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px">
-  <div style="width:100%;max-width:420px;background:#fff;border-radius:24px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center">
-    <div style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#6c5ce7,#ff6b6b);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px">💰</div>
-    <h3 style="font-size:20px;font-weight:900;margin-bottom:6px;color:#0f0f12">Unlock MPSC Quiz — Tip Jar</h3>
-    <p style="font-size:13px;opacity:.6;color:#0f0f12;margin-bottom:16px;line-height:1.5">Scan paid? Tip <b>10₹ via G-Pay</b> or <b>100 sats via Lightning</b> → unlocks all 30+ quizzes. Earnings go directly to PBG (as your agent).</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-      <a href="upi://pay?pa=metaforcecrore@okicici&pn=PBG%20Mmindpower&am=10&cu=INR" onclick="localStorage.setItem('pbg_paid','gpay');return true" style="padding:14px;border-radius:12px;background:#4285f4;color:#fff;text-decoration:none;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px">💳 G-Pay 10₹</a>
-      <a href="lightning:olderreport808@walletofsatoshi.com" onclick="localStorage.setItem('pbg_paid','lightning');localStorage.setItem('pbg_paid_amt','100');return true" style="padding:14px;border-radius:12px;background:#facc15;color:#111;text-decoration:none;font-weight:800;font-size:14px;border:1px solid #eab308;display:flex;align-items:center;justify-content:center;gap:6px">⚡ 100 sats</a>
+<div class="hub">
+  <a class="card gold" href="https://t.me/Mmindpower_bot/Mmindpower_KBC">
+    <div class="ic">🎯</div>
+    <div><div class="tt">Play the KBC Mini App</div><div class="dd">810 questions • Sets A–I • 3 lifelines • new set daily</div></div>
+    <div class="go">→</div>
+  </a>
+  <a class="card" href="https://t.me/Mmindpower_bot">
+    <div class="ic">🤖</div>
+    <div><div class="tt">Telegram Bot — @Mmindpower_bot</div><div class="dd">Daily quiz auto-post • AI chat • leaderboard</div></div>
+    <div class="go">→</div>
+  </a>
+  <a class="card" href="https://t.me/mmindpower_1">
+    <div class="ic">📣</div>
+    <div><div class="tt">Channel — @mmindpower_1</div><div class="dd">Daily questions + answers in your feed</div></div>
+    <div class="go">→</div>
+  </a>
+  <a class="card" href="pay/">
+    <div class="ic">☕</div>
+    <div><div class="tt">Small Support — ₹5</div><div class="dd">100% optional · Mmindpower stays free forever</div></div>
+    <div class="go">→</div>
+  </a>
+  <a class="card" href="index.html">
+    <div class="ic">📝</div>
+    <div><div class="tt">Practice Browser — Sets A+B</div><div class="dd">180 questions with answers hidden • filter by subject</div></div>
+    <div class="go">→</div>
+  </a>
+</div>
+
+<div class="quiz-window" id="quizWindow">
+  <div class="qw-head">
+    <div class="q-icon">📚</div>
+    <div>
+      <h3>Full Quiz Archive</h3>
+      <p>3630 + 90 questions • 42 sets • classic pages</p>
     </div>
-    <div style="display:flex;gap:8px">
-      <button onclick="localStorage.setItem('pbg_paid','yes');document.getElementById('paywall').style.display='none';document.querySelector('.quiz-window').classList.add('expanded');window.scrollTo({top:0,behavior:'smooth'})" style="flex:1;padding:12px;border-radius:12px;background:#10b981;color:#fff;border:none;font-weight:800;cursor:pointer">I Paid → Unlock</button>
-      <button onclick="document.getElementById('paywall').style.display='none'" style="padding:12px 16px;border-radius:12px;background:#f3f4f6;color:#111;border:none;font-weight:700;cursor:pointer">Later</button>
-    </div>
-    <p style="font-size:11px;opacity:.5;margin-top:10px">Tip Jar as agent — UPI <code>metaforcecrore@okicici</code> • Lightning <code>olderreport808@walletofsatoshi.com</code> • <span id="paywall-status" style="color:#10b981"></span></p>
+  </div>
+  <div class="hint"><span class="dot"></span> Tap to reveal all sets</div>
+  <div class="second-layer" id="arch">
+    <div class="divider"></div>
   </div>
 </div>
+
+<div class="foot">🙏 धन्यवाद — <b>तुमचं प्रेम आमचं इंधन!</b> 💪<br>Mmindpower stays free forever 🎓 · ₹5 support is always optional</div>
+
 <script>
-// Paywall logic - show if not paid, unlock if paid
+var ARCHIVE=[
+ ['index.html','📝 Set A+B - 180 Qs'],
+ ['quiz2.html','📚 Set C - 90 Qs (Old)'],
+ ['quiz3.html','🚀 Set D - 90 Qs - 4th'],
+ ['quiz4.html','🔥 Set E - 90 Qs - 5th'],
+ ['quiz5.html','⚡ Set F - 90 Qs - 6th'],
+ ['quiz6.html','💎 Set G - 90 Qs - 7th'],
+ ['quiz7.html','🌟 Set H - 90 Qs - 8th (New as-is)'],
+ ['quiz8.html','🔥 Set O - 90 Qs - 9th (New)'],
+ ['quiz10.html','🧠 Set M - 90 Qs - 10th (New)'],
+ ['quiz11.html','🚀 Set L - 90 Qs - 11th (New)'],
+ ['quiz9.html','📘 Set I - 90 Qs - 12th (SIR Bihar) - Fills I gap'],
+ ['quiz13.html','⚖️ Set J - 90 Qs - 13th (Finance Commission 16th)'],
+ ['quiz14.html','🌦️ Set K - 90 Qs - 14th (Mission Mausam / PM E-DRIVE)'],
+ ['quiz15.html','🔄 Set N - 90 Qs - 15th (Restored - Finance Commission / GSTAT)'],
+ ['quiz16.html','🛰️ Set P - 90 Qs - 16th (Axiom-4 / Sports Board)'],
+ ['quiz17.html','⚓ Set Q - 90 Qs - 17th (Vadhavan Port 76,220cr)'],
+ ['quiz18.html','🌧️ Set R - 90 Qs - 18th (Mission Mausam/PM E-DRIVE/NCMM)'],
+ ['quiz19.html','🌾 Set S - 90 Qs - 19th (PM-KISAN/AMRUT/SVANidhi)'],
+ ['quiz20.html','💳 Set T - 90 Qs - 20th (PMJDY/MUDRA/PMAY/Jal Jeevan)'],
+ ['quiz21.html','🚀 Set U - 90 Qs - 21st (Axiom-4 ISS/Sahkar/Critical Minerals)'],
+ ['quiz22.html','🌐 Set V - 90 Qs - 22nd (BRICS 2026/COP31/FIFA 48)'],
+ ['quiz23.html','🤖 Set W - 90 Qs - 23rd (BharatGen AI/India AI Summit/Semicon)'],
+ ['quiz24.html','🏝️ Set X - 90 Qs - 24th (Great Nicobar ICTT/Henley Passport)'],
+ ['quiz25.html','🐯 Set Y - 90 Qs - 25th (Tiger Estimation 3167/Exports)'],
+ ['quiz26.html','📅 Set Z - 90 Qs - 26th (Daily Set - Ramsar 96/Tata Semicon Assam)'],
+ ['quiz27.html','📜 Set AA - 30 Qs - 27th (Theme1 - Yadava Kalegaon/Tamasha/Women Orgs)'],
+ ['quiz28.html','🌉 Set AB - 90 Qs - 28th (Chenab Bridge/8th Pay/Vizhinjam/Z-Morh)'],
+ ['quiz29.html','📖 Set AC - 90 Qs - 29th (Theme2 - Epigraphy/Hatigumpha/Kharavela)'],
+ ['quiz30.html','🎯 Set AD - 90 Qs - 30th (Op Sindoor/Bahmani/Rivers/Green Revolution)'],
+ ['quiz31.html','🏛️ Set AE - 90 Qs - 31st (Pratihara/Pala/Tarain/Lac Operon)'],
+ ['quiz32.html','📰 Set AF - 30 Qs - 32nd (Theme1 24Sep - Darpan 1832/Leelacharitra/Modi/Sohgaura)'],
+ ['quiz33.html','🏏 Set AG - 90 Qs - 33rd (84th Amend/Op Brahma/Champions Trophy/Atal Setu)'],
+ ['quiz34.html','🌾 Set AH - 90 Qs - 34th (Krishi Sankalp/Asian Games Aichi/SEMICON/DRDO Laser)'],
+ ['quiz35.html','🌍 Set AI - 90 Qs - 35th (PBD Bhubaneswar/Waqf UMEED/8th Pay/Ramsar crono)'],
+ ['quiz36.html','⚡ Set AJ - 90 Qs - 36th (Kishau Project/Yudh Abhyas/WCEF Gandhinagar/ISM 2.0)'],
+ ['quiz37.html','📊 Set AK - 90 Qs - 37th (SDG Index/GDP 6.5%/Lion Census 891/16th FC)'],
+ ['quiz38.html','🛡️ Set AL - 90 Qs - 38th (MERCOSUR/GIFT/SLINEX-26/DRDO Laser)'],
+ ['quiz39.html','💰 Set AM - 90 Qs - 39th (Budget 26-27 FRBM/G20 BRICS/ISRO/UPI vs CBDC/Green H2)'],
+ ['quiz40.html','📇 Set AN - 90 Qs - 40th (Census 2027/Waqf 2025/ONOE Kovind/Quantum/IndiaAI/Surya Ghar)'],
+ ['quiz41.html','📇 Set AO - 90 Qs - 41st (18th LS Arithmetic/PM-JAY 70+/Drone Didi/Nobel 2024/SVAMITVA)'],
+ ['quiz42.html','📇 Set AP - 90 Qs - 42nd (ONOE Kovind/Waqf UMEED/Maha Kumbh/Maratha UNESCO/IT Act 2025)']
+];
 (function(){
-  const paid = localStorage.getItem('pbg_paid');
-  const qw = document.querySelector('.quiz-window');
-  const origClick = qw ? qw.onclick : null;
-  if(qw){
-    qw.addEventListener('click', function(e){
-      const isPaid = localStorage.getItem('pbg_paid');
-      if(!isPaid && !qw.classList.contains('expanded')){
-        e.stopPropagation();
-        e.preventDefault();
-        document.getElementById('paywall').style.display='flex';
-        return false;
-      }
-    }, true);
-    // If already paid, expand directly
-    if(paid){
-      // keep expanded behavior
-    }
-  }
-  // Show paywall status if paid
-  if(paid){
-    const el=document.getElementById('paywall-status');
-    if(el) el.textContent='Unlocked via '+paid;
-  }
-  // Auto-show paywall on quiz titles click if not paid
-  document.querySelectorAll('.quiz-title').forEach(el=>{
-    el.addEventListener('click', function(e){
-      if(!localStorage.getItem('pbg_paid')){
-        e.stopPropagation();
-        e.preventDefault();
-        document.getElementById('paywall').style.display='flex';
-      }
-    }, true);
+  var arch=document.getElementById('arch');
+  ARCHIVE.forEach(function(it,i){
+    var d=document.createElement('div');
+    d.className='quiz-title';
+    d.style.transitionDelay=(Math.min(i,40)*0.04)+'s';
+    d.innerHTML='<span>'+it[1]+'</span><span class="arr">→</span>';
+    d.onclick=function(e){e.stopPropagation();location.href=it[0];};
+    arch.appendChild(d);
+  });
+  var win=document.getElementById('quizWindow'),exp=false;
+  win.addEventListener('click',function(){
+    if(!exp){win.classList.add('expanded');exp=true;win.querySelector('.hint').innerHTML='👇 Tap a set to open it';}
   });
 })();
 </script>
-
 </body></html>
