@@ -98,6 +98,8 @@
     background: linear-gradient(135deg, var(--gold2), #b87700); color: #1d1400;
     border: 1px solid rgba(255,222,130,.6); box-shadow: 0 8px 24px rgba(232,169,28,.35);
   }
+  .bigbtn.yt { background: linear-gradient(135deg,#ff5f52,#c4302b); color: #fff;
+    border: 1px solid rgba(255,120,110,.5); box-shadow: 0 8px 20px rgba(229,57,53,.30); }
   .row2 { display: flex; gap: 10px; } .row2 .bigbtn { flex: 1; }
 
   /* quiz top */
@@ -210,8 +212,7 @@
     <div class="card center muted" id="shelf-note">Pick a set and start practising — progress saves automatically 💾</div>
     <div id="shelf-list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
     <a class="bigbtn gold" id="btn-donate-shelf" href="https://drawdrawdraw2025.github.io/pay/">☕ Support Mmindpower ₹5</a>
-    <a class="bigbtn ghost" id="btn-channel" href="https://t.me/mmindpower_1">📢 Join Channel — updates @mmindpower_1</a>
-    <a class="bigbtn ghost" id="btn-youtube" href="https://youtube.com/@mmindpower">📺 YouTube — @mmindpower</a>
+    <a class="bigbtn yt" id="btn-youtube" href="https://youtube.com/@mmindpower">📺 Subscribe on YouTube — @mmindpower</a>
   </div>
 
   <div id="view-quiz" class="hidden">
@@ -257,6 +258,7 @@
     <button class="bigbtn" id="btn-review">🔍 Review mistakes</button>
     <button class="bigbtn ghost" id="btn-replay">🔁 Replay this set</button>
     <a class="bigbtn gold" id="btn-donate-res" href="https://drawdrawdraw2025.github.io/pay/">☕ Support Mmindpower ₹5</a>
+    <button class="bigbtn yt" id="btn-youtube2">📺 Subscribe on YouTube — @mmindpower</button>
     <button class="bigbtn ghost" id="btn-shelf">🗂️ All sets</button>
   </div>
 
@@ -328,8 +330,7 @@ function setMainBtn(text, cb){
 function hideMainBtn(){
   if(IN_TG && TG.MainButton){ try{ TG.MainButton.hide(); if(mainCb){ TG.MainButton.offClick(mainCb); mainCb=null; } }catch(e){} } }
 ["btn-donate-shelf","btn-donate-res"].forEach(function(id){ el(id).addEventListener("click", function(e){ e.preventDefault(); openDonate(); }); });
-el("btn-channel").addEventListener("click", function(e){ e.preventDefault(); var u="https://t.me/mmindpower_1"; if(IN_TG && TG.openTelegramLink){ TG.openTelegramLink(u); } else { window.location.href=u; } });
-el("btn-youtube").addEventListener("click", function(e){ e.preventDefault(); var u="https://youtube.com/@mmindpower"; if(IN_TG && TG.openLink){ TG.openLink(u); } else { window.location.href=u; } });
+["btn-youtube","btn-youtube2"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){ e.preventDefault(); var u="https://youtube.com/@mmindpower"; if(IN_TG && TG.openLink){ TG.openLink(u); } else { window.location.href=u; } }); });
 if (TG && TG.BackButton){ try{ TG.BackButton.onClick(function(){ if(!el("view-review").classList.contains("hidden")){ backFromReview(); } else { goShelf(); } }); }catch(e){} }
 
 /* ---------- state ---------- */
