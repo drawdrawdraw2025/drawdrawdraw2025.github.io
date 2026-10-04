@@ -186,7 +186,7 @@ var TG = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : 
 var IN_TG = !!(TG && TG.initData);
 if (TG) { try { TG.ready(); TG.expand(); TG.setHeaderColor('#0d1f3c'); TG.setBackgroundColor('#0d1f3c'); } catch(e){} }
 var PAY_URL = "https://drawdrawdraw2025.github.io/pay/";
-var SETS = [ {id:"A", file:"data/set_a.json"}, {id:"B", file:"data/set_b.json"}, {id:"C", file:"data/set_c.json"}, {id:"D", file:"data/set_d.json"} ];
+var SETS = [ {id:"A", file:"data/set_a.json"}, {id:"B", file:"data/set_b.json"}, {id:"C", file:"data/set_c.json"}, {id:"D", file:"data/set_d.json"}, {id:"E", file:"data/set_e.json"}, {id:"F", file:"data/set_f.json"}, {id:"G", file:"data/set_g.json"}, {id:"H", file:"data/set_h.json"}, {id:"I", file:"data/set_i.json"} ];
 var DATA = {}, ST = {}, LANG = "both", CUR = null;
 
 /* ---------- storage: Telegram CloudStorage + localStorage mirror ---------- */
@@ -249,6 +249,7 @@ function renderQ(){
   var qm = q.q_marathi||"", qe = q.q_english||"", body = "";
   if (LANG!=="en" && qm){ body += '<div class="qtext mr'+(isTbl(qm)?' tbl':'')+'">'+esc(qm)+'</div>'; }
   if (LANG!=="mr" && qe){ body += '<div class="qtext en'+(isTbl(qe)?' tbl':'')+'"'+(LANG==="en"?' style="border:none;padding-top:0"':'')+'>'+esc(qe)+'</div>'; }
+  else if (LANG==="en" && !qe && qm){ body += '<div class="qtext en'+(isTbl(qm)?' tbl':'')+'" style="border:none;padding-top:0">'+esc(qm)+'<div style="font-size:11px;margin-top:6px;color:#8a93a5">(मराठी-only question 📝)</div></div>'; }
   el("qbody").innerHTML = body;
   var letters=["A","B","C","D"], oh="";
   (q.options||[]).slice(0,4).forEach(function(o,ix){ oh += '<button class="opt" data-ix="'+ix+'"><span class="L">'+letters[ix]+'</span><span>'+esc(o)+'</span></button>'; });
