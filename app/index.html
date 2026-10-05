@@ -343,7 +343,25 @@ function show(v){ ["view-shelf","view-quiz","view-result","view-review","view-jo
   if(TG && TG.BackButton){ try{ if(v==="view-shelf"){TG.BackButton.hide();} else {TG.BackButton.show();} }catch(e){} } }
 function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
 function isTbl(t){ return /\|/.test(t) || /─/.test(t) || /═/.test(t); }
-function openDonate(){ if(IN_TG && TG.openLink){ TG.openLink(PAY_URL); } else { window.location.href = PAY_URL; } }
+/* ---------- universal navigation lanes (web15) ---------- */
+function sysOpen(u){ if(IN_TG && TG.openLink){ TG.openLink(u); } else { window.open(u,"_blank"); } }
+function stagedOpen(u, scheme){
+  var fell=false;
+  var tof=setTimeout(function(){ if(!fell){ fell=true; sysOpen(u); } }, 1700);
+  var vis=function(){ if(document.visibilityState==="hidden"){ fell=true; clearTimeout(tof); document.removeEventListener("visibilitychange", vis); } };
+  document.addEventListener("visibilitychange", vis);
+  try{ window.location=scheme; }catch(e){ clearTimeout(tof); document.removeEventListener("visibilitychange", vis); if(!fell){ fell=true; sysOpen(u); } }
+}
+function nav(u, lane){
+  var ua=navigator.userAgent||"", andr=/android/i.test(ua);
+  if(lane==="telegram"){ if(IN_TG && TG.openTelegramLink){ TG.openTelegramLink(u); return; } sysOpen(u); return; }
+  if(!andr){ sysOpen(u); return; }
+  if(lane==="yt"){ stagedOpen(u, "vnd.youtube://channel/UCej-XNNdEDWnvgtPIaBBO8A"); return; }
+  var m=u.match(/^https?:\/\/([^/]+)(\/[^#]*)?$/), scheme=u.split(":")[0];
+  if(m){ stagedOpen(u, "intent://"+m[1]+(m[2]||"/")+"#Intent;scheme="+scheme+";end"); return; }
+  sysOpen(u);
+}
+function openDonate(){ nav(PAY_URL,"web"); }
 function buzz(kind){ if(!(IN_TG && TG.HapticFeedback))return; try{
   if(kind==="win") TG.HapticFeedback.notificationOccurred("success");
   else if(kind==="lose") TG.HapticFeedback.notificationOccurred("error");
@@ -374,18 +392,8 @@ function setMainBtn(text, cb){
 function hideMainBtn(){
   if(IN_TG && TG.MainButton){ try{ TG.MainButton.hide(); if(mainCb){ TG.MainButton.offClick(mainCb); mainCb=null; } }catch(e){} } }
 ["btn-donate-shelf","btn-donate-res"].forEach(function(id){ el(id).addEventListener("click", function(e){ e.preventDefault(); openDonate(); }); });
-function openYouTube(){
-  var httpsU="https://www.youtube.com/@mmindpower", ua=navigator.userAgent||"";
-  var fb=function(){ if(IN_TG && TG.openLink){ TG.openLink(httpsU); } else { window.open(httpsU,"_blank"); } };
-  if(!/android/i.test(ua)){ fb(); return; }
-  var fell=false, start=Date.now();
-  var tof=setTimeout(function(){ if(!fell){ fell=true; fb(); } }, 1600);
-  var vis=function(){ if(document.visibilityState==="hidden"){ fell=true; clearTimeout(tof); document.removeEventListener("visibilitychange", vis); } };
-  document.addEventListener("visibilitychange", vis);
-  try{ window.location="vnd.youtube://channel/UCej-XNNdEDWnvgtPIaBBO8A"; }catch(e){ clearTimeout(tof); if(!fell){ fell=true; fb(); } document.removeEventListener("visibilitychange", vis); }
-}
-["btn-youtube","btn-youtube2"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){ e.preventDefault(); openYouTube(); }); });
-["btn-channel","btn-channel2"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){ e.preventDefault(); var u="https://t.me/mmindpower_1"; if(IN_TG && TG.openTelegramLink){ TG.openTelegramLink(u); } else { window.location.href=u; } }); });
+["btn-youtube","btn-youtube2"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){ e.preventDefault(); nav("https://www.youtube.com/@mmindpower","yt"); }); });
+["btn-channel","btn-channel2"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){ e.preventDefault(); nav("https://t.me/mmindpower_1","telegram"); }); });
 if (TG && TG.BackButton){ try{ TG.BackButton.onClick(function(){ if(!el("view-review").classList.contains("hidden")){ backFromReview(); } else if(!el("view-journal").classList.contains("hidden")){ goShelf(); } else { goShelf(); } }); }catch(e){} }
 
 /* ---------- state ---------- */
