@@ -211,12 +211,27 @@
   #confetti span { position: absolute; top: -8vh; font-size: 24px; animation: fall linear forwards; }
   @keyframes fall { to { transform: translateY(118vh) rotate(560deg); } }
   .spinner { color: var(--ink-dim); text-align: center; padding: 40px 0; font-size: 14px; }
+/* ---------- Answer Journal (web12) ---------- */
+.brandrow{display:flex;align-items:center;justify-content:center;gap:10px}
+.jiconbtn{position:relative;background:#16213b;border:1px solid #2b3f6b;color:#fff;border-radius:12px;font-size:20px;padding:7px 11px;cursor:pointer;line-height:1}
+.jbadge{position:absolute;top:-7px;right:-7px;background:#e5b545;color:#121a33;font-size:10px;font-weight:800;border-radius:10px;padding:2px 6px;min-width:16px}
+.jtabs{display:flex;gap:6px;justify-content:center;margin-bottom:10px}
+.jtab{background:#16213b;border:1px solid #2b3f6b;color:#dfe7ff;font-size:12px;border-radius:20px;padding:6px 12px;cursor:pointer}
+.jtab.on{background:#e5b545;color:#121a33;font-weight:800;border-color:#e5b545}
+.jset{margin:14px 0 6px;font-size:12px;font-weight:800;color:#e5b545;letter-spacing:.4px}
+.jreq{background:#111c33;border:1px solid #27365c;border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:13px;line-height:1.35}
+.jreq .jt{font-weight:700;margin-bottom:4px}
+.jreq .jen{color:#8fa3d9;font-size:11.5px;display:block;margin-bottom:6px}
+.jans{display:block;padding:2px 0;font-size:12.5px}
+.jans.wrong2{color:#ff9a9a}
+.jans.right2{color:#8ef0b2}
+.jmeta{color:#6b7dab;font-size:10.5px;margin-bottom:6px;display:block}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="brand">
-    <h1>🎓 Mmindpower Practice</h1>
+    <div class="brandrow"><button id="btn-journal" class="jiconbtn" title="उत्तर-पुस्तिका">📖<span class="jbadge" id="jr-badge" style="display:none">0</span></button><h1>🎓 Mmindpower Practice</h1></div>
     <div class="tag">MPSC GK • KBC Lifelines 🎰 • बहुभाषिक • Free forever</div>
   </div>
 
@@ -284,6 +299,17 @@
     <div class="card"><div id="rev-body"></div></div>
     <button class="bigbtn ghost" id="btn-back-res">◀ Back</button>
   </div>
+  <div id="view-journal" class="hidden">
+    <div class="card">
+      <div class="jtabs">
+        <button class="jtab on" data-jt="all">📝 All</button>
+        <button class="jtab" data-jt="wrong">❌ Mistakes</button>
+        <button class="jtab" data-jt="right">✅ Correct</button>
+      </div>
+      <div id="jr-body"></div>
+    </div>
+    <button class="bigbtn ghost" id="btn-jr-back">◀ Back to sets</button>
+  </div>
   <div class="llmodal hidden" id="llmodal"><div class="llcard" id="llcard"></div></div>
   <div id="confetti"></div>
 </div>
@@ -308,7 +334,7 @@ function sget(k,cb){ var loc=null; try{ loc=localStorage.getItem("mm_"+k); }catc
 
 /* ---------- helpers ---------- */
 function el(id){ return document.getElementById(id); }
-function show(v){ ["view-shelf","view-quiz","view-result","view-review"].forEach(function(x){
+function show(v){ ["view-shelf","view-quiz","view-result","view-review","view-journal"].forEach(function(x){
     var n=el(x), on=(x===v);
     n.classList.toggle("hidden", !on);
     n.classList.toggle("viewin", on);
@@ -350,14 +376,15 @@ function hideMainBtn(){
 ["btn-donate-shelf","btn-donate-res"].forEach(function(id){ el(id).addEventListener("click", function(e){ e.preventDefault(); openDonate(); }); });
 ["btn-youtube","btn-youtube2"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){ e.preventDefault(); var u="https://youtube.com/@mmindpower"; if(IN_TG && TG.openLink){ TG.openLink(u); } else { window.location.href=u; } }); });
 ["btn-channel","btn-channel2"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){ e.preventDefault(); var u="https://t.me/mmindpower_1"; if(IN_TG && TG.openTelegramLink){ TG.openTelegramLink(u); } else { window.location.href=u; } }); });
-if (TG && TG.BackButton){ try{ TG.BackButton.onClick(function(){ if(!el("view-review").classList.contains("hidden")){ backFromReview(); } else { goShelf(); } }); }catch(e){} }
+if (TG && TG.BackButton){ try{ TG.BackButton.onClick(function(){ if(!el("view-review").classList.contains("hidden")){ backFromReview(); } else if(!el("view-journal").classList.contains("hidden")){ goShelf(); } else { goShelf(); } }); }catch(e){} }
 
 /* ---------- state ---------- */
-function stShape(){ return {i:0, correct:0, wrong:[], finished:false, best:null}; }
+function stShape(){ return {i:0, correct:0, wrong:[], log:[], finished:false, best:null}; }
 function saveSt(){ sset("st_v1", ST); }
 
 /* ---------- shelf ---------- */
 function renderShelf(){
+  jrBadge();
   var html = "";
   SETS.forEach(function(s){
     var st = ST[s.id] || stShape();
@@ -417,6 +444,7 @@ function pick(ix){
     else if (bi===ix) b.classList.add("no");
   });
   if (ix===ci){ st.correct++; var tot=DATA[CUR].length; scoreChip(); scorePop(st.correct===Math.round(tot*0.5)||st.correct===Math.round(tot*0.9)); buzz("win"); } else { st.wrong.push({q: st.i, mine: ix}); buzz("lose"); }
+  if(!st.log) st.log=[]; st.log.push({q: st.i, mine: ix}); if(st.log.length>150) st.log=st.log.slice(-150);
   var e = el("exp");
   var ex = q.explanation_marathi || "";
   if (ex){ e.textContent = "💡 " + ex; e.style.display="block"; }
@@ -546,6 +574,54 @@ function renderReview(){
 }
 function backFromReview(){ renderResult(); show("view-result"); }
 el("btn-review").addEventListener("click", function(){ buzz("sel"); renderReview(); show("view-review"); });
+
+/* ---------- Answer Journal (web12) ---------- */
+var JRT="all";
+function jrTotal(){ var n=0; Object.keys(ST).forEach(function(k){ var l=(ST[k]||{}).log; if(l&&l.length) n+=l.length; }); return n; }
+function jrBadge(){ var n=jrTotal(), b=el("jr-badge"); if(!b) return; b.textContent=n>99?"99+":String(n); b.style.display=n?"block":"none"; }
+function renderJournal(){
+  var h="", shown=0, miss=0;
+  ["wrong","right","all"].indexOf(JRT);
+  SETS.forEach(function(sd){
+    var st=ST[sd.id];
+    if(!st||!st.log||!st.log.length||!DATA[sd.id]) return;
+    var rows=[];
+    for(var k=st.log.length-1;k>=0;k--){
+      var w=st.log[k], q=DATA[sd.id][w.q]; if(!q) continue;
+      var ci=q.correct_index, ok=(w.mine===ci);
+      if(JRT==="wrong"&&ok) continue;
+      if(JRT==="right"&&!ok) continue;
+      rows.push('<div class="jreq"><span class="jmeta">Set '+sd.id+' · Q'+(w.q+1)+' · '+esc(q.qtype||"")+'</span>'+
+        '<div class="jt">'+esc(q.q_marathi||"")+'</div>'+
+        (q.q_english?'<span class="jen">'+esc(q.q_english)+'</span>':'')+
+        '<span class="jans '+(!ok?"wrong2":"right2")+'">🖊 Your answer: '+["A","B","C","D"][w.mine]+') '+esc(q.options[w.mine])+(!ok?' ❌':' ✅')+'</span>'+
+        '<span class="jans right2">🎯 Correct answer: '+["A","B","C","D"][ci]+') '+esc(q.options[ci])+'</span>'+
+        (q.explanation_marathi?'<span class="jen">💡 '+esc(q.explanation_marathi.slice(0,220))+'</span>':'')+'</div>');
+      shown++;
+    }
+    if(rows.length) h+='<div class="jset">📚 SET '+sd.id+'</div>'+rows.join("");
+  });
+  SETS.forEach(function(sd){ var st=ST[sd.id]; if(st&&st.log&&st.log.length&&!DATA[sd.id]) miss++; });
+  if(!h){ h = miss ? '<div class="center muted">Loading your journal… ⏳</div>'
+      : '<div class="center muted">अजून उत्तरं नाही — कोणतीही संच सुरू करा आणि प्रत्येक उत्तर इथे साठवले जाईल! 📖✨</div>'; }
+  el("jr-body").innerHTML=h;
+}
+function openJournal(){
+  buzz("sel");
+  var need=[];
+  Object.keys(ST).forEach(function(k){ var st=ST[k]; if(st&&st.log&&st.log.length&&!DATA[k]) need.push(k); });
+  var done=function(){ renderJournal(); show("view-journal"); };
+  if(!need.length){ done(); return; }
+  renderJournal(); show("view-journal");
+  var pend=need.length;
+  need.forEach(function(id){
+    fetch("data/set_"+id.toLowerCase()+".json").then(function(r){return r.json();}).then(function(j){ DATA[id]=j; })
+      .catch(function(){}).then(function(){ if(--pend===0) renderJournal(); });
+  });
+}
+el("btn-journal").addEventListener("click", openJournal);
+el("btn-jr-back").addEventListener("click", function(){ buzz("sel"); goShelf(); });
+document.querySelectorAll(".jtab").forEach(function(t){ t.addEventListener("click", function(){ JRT=t.dataset.jt; document.querySelectorAll(".jtab").forEach(function(x){x.classList.toggle("on",x===t);}); buzz("sel"); renderJournal(); }); });
 el("btn-back-res").addEventListener("click", backFromReview);
 el("btn-replay").addEventListener("click", function(){ var keep=ST[CUR].best; ST[CUR]=stShape(); ST[CUR].best=keep; Object.keys(REMOVED).forEach(function(k){ if(k.indexOf(CUR+"_")===0) delete REMOVED[k]; }); saveSt(); buzz("sel"); startSet(CUR); });
 el("btn-shelf").addEventListener("click", goShelf);
