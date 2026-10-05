@@ -108,6 +108,11 @@
   .upi-title { display: block; font-size: 17px; font-weight: 900; letter-spacing: .2px; }
   .upi-steps { display: block; font-size: 13px; font-weight: 700; line-height: 1.6; opacity: .97; }
   .upi-steps b { color: #ffe9a8; }
+  .bigbtn.mini { padding: 11px 4px; font-size: 13.5px; border-radius: 12px; margin-top: 10px; font-weight: 800; }
+  .bigbtn.gpay  { background: linear-gradient(135deg,#4b9bff,#1a56d6); color:#fff; border:1px solid rgba(160,200,255,.5); }
+  .bigbtn.paytm { background: linear-gradient(135deg,#7fe0ff,#00b9f1); color:#00263d; border:1px solid rgba(160,230,255,.6); }
+  .bigbtn.bhim  { background: linear-gradient(135deg,#ffb27a,#ed752e); color:#3a1a00; border:1px solid rgba(255,190,140,.6); }
+  .qrwall-img { width: 100%; border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.45); }
   .row2 { display: flex; gap: 10px; } .row2 .bigbtn { flex: 1; }
 
   /* quiz top */
@@ -247,10 +252,21 @@
     <div class="card center muted" id="shelf-note">Pick a set and start practising — progress saves automatically 💾</div>
     <div id="shelf-list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
     <a class="bigbtn upi upi-big" id="btn-upi-shelf" href="upi://pay?pa=mmindpower.contact@oksbi&pn=BALU%20DASHRATH%20GARJE&cu=INR"><span class="upi-title">💸 Your Little support  via  PhonePe 📲</span><span class="upi-steps">1️⃣ Tap &amp; hold this button — दाबून ठेवा 👆<br>2️⃣ Select 3rd line <b>"Open in…"</b><br>3️⃣ Pick your PhonePe app तुमचे  PhonePe app  निवडा. ☺️<br>4️⃣ जर app आवडले असेल तर एक zero 0 वाढवू शकता.</span></a>
+    
+    <div class="row2" style="gap:8px"><button class="bigbtn mini gpay"  id="btn-wg-s" data-app="GPay">📲 GPay</button><button class="bigbtn mini paytm" id="btn-wp-s" data-app="Paytm">💸 Paytm</button><button class="bigbtn mini bhim"  id="btn-wb-s" data-app="BHIM">🟧 BHIM</button></div>
     <a class="bigbtn yt" id="btn-youtube" href="https://youtube.com/@mmindpower">📺 Subscribe on YouTube — @mmindpower</a>
     <a class="bigbtn ghost" id="btn-channel" href="https://t.me/mmindpower_1">📣 Also on Telegram — @mmindpower_1</a>
   </div>
 
+  <div id="view-qrwall" class="hidden">
+    <div class="card center">
+      <img class="qrwall-img" src="assets/support_wall.png" alt="Support UPI QR">
+      <div id="qrwall-tip" class="muted" style="margin-top:12px;font-weight:700;line-height:1.6;font-size:13.5px"></div>
+      <button class="bigbtn ghost" id="btn-qupi" style="margin-top:10px">🆔 Copy UPI ID</button>
+      <a class="bigbtn ghost" id="btn-qchan" href="https://t.me/mmindpower_1" style="margin-top:8px">📣 Open in Channel</a>
+      <button class="bigbtn ghost" id="btn-qback" style="margin-top:8px">◀ Back</button>
+    </div>
+  </div>
   <div id="view-quiz" class="hidden">
     <div class="quiztop">
       <button class="homebtn" id="btn-home" title="Home">🏠</button>
@@ -298,6 +314,8 @@
     <button class="bigbtn" id="btn-review">🔍 Review mistakes</button>
     <button class="bigbtn ghost" id="btn-replay">🔁 Replay this set</button>
     <a class="bigbtn upi upi-big" id="btn-upi-res" href="upi://pay?pa=mmindpower.contact@oksbi&pn=BALU%20DASHRATH%20GARJE&cu=INR"><span class="upi-title">💸 Your Little support  via  PhonePe 📲</span><span class="upi-steps">1️⃣ Tap &amp; hold this button — दाबून ठेवा 👆<br>2️⃣ Select 3rd line <b>"Open in…"</b><br>3️⃣ Pick your PhonePe app तुमचे  PhonePe app  निवडा. ☺️<br>4️⃣ जर app आवडले असेल तर एक zero 0 वाढवू शकता.</span></a>
+    
+    <div class="row2" style="gap:8px"><button class="bigbtn mini gpay"  id="btn-wg-r" data-app="GPay">📲 GPay</button><button class="bigbtn mini paytm" id="btn-wp-r" data-app="Paytm">💸 Paytm</button><button class="bigbtn mini bhim"  id="btn-wb-r" data-app="BHIM">🟧 BHIM</button></div>
     <button class="bigbtn yt" id="btn-youtube2">📺 Subscribe on YouTube — @mmindpower</button>
     <button class="bigbtn ghost" id="btn-channel2">📣 Also on Telegram — @mmindpower_1</button>
     <button class="bigbtn ghost" id="btn-shelf">🗂️ All sets</button>
@@ -343,7 +361,7 @@ function sget(k,cb){ var loc=null; try{ loc=localStorage.getItem("mm_"+k); }catc
 
 /* ---------- helpers ---------- */
 function el(id){ return document.getElementById(id); }
-function show(v){ ["view-shelf","view-quiz","view-result","view-review","view-journal"].forEach(function(x){
+function show(v){ ["view-shelf","view-quiz","view-result","view-review","view-journal","view-qrwall"].forEach(function(x){
     var n=el(x), on=(x===v);
     n.classList.toggle("hidden", !on);
     n.classList.toggle("viewin", on);
@@ -408,6 +426,25 @@ function hideMainBtn(){
 ["btn-channel","btn-channel2"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){ e.preventDefault(); nav("https://t.me/mmindpower_1","telegram"); }); });
 if (TG && TG.BackButton){ try{ TG.BackButton.onClick(function(){ if(!el("view-review").classList.contains("hidden")){ backFromReview(); } else if(!el("view-journal").classList.contains("hidden")){ goShelf(); } else { goShelf(); } }); }catch(e){} }
 
+/* ---------- QR wall (per-app gateways to the same QR) ---------- */
+var WALL_FROM = "view-shelf", WAL_MAP = {GPay:"GPay 📲", Paytm:"Paytm 💙", BHIM:"BHIM 🟧"};
+["btn-wg-s","btn-wp-s","btn-wb-s","btn-wg-r","btn-wp-r","btn-wb-r"].forEach(function(id){
+  var b=el(id); if(!b) return;
+  b.addEventListener("click", function(e){
+    e.preventDefault(); buzz("sel");
+    WALL_FROM = id.slice(-1)==="r" ? "view-result" : "view-shelf";
+    var A = b.getAttribute("data-app");
+    el("qrwall-tip").innerHTML = WAL_MAP[A] + " पायरी:<br>1️⃣ या QR चा <b>screenshot</b> काढा 📸<br>2️⃣ " + A + " उघडा → <b>QR scan</b> icon दाबा<br>3️⃣ <b>Gallery / Photos</b> निवडा → ही image select करा<br>4️⃣ ₹5 भरलेली — edit freely 🤗";
+    show("view-qrwall");
+  });
+});
+el("btn-qupi").addEventListener("click", function(e){ e.preventDefault(); buzz("sel");
+  var t=document.createElement("textarea"); t.value="mmindpower.contact@oksbi"; document.body.appendChild(t); t.select();
+  try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t.value); } else { document.execCommand("copy"); } }catch(err){ try{ document.execCommand("copy"); }catch(e2){} }
+  document.body.removeChild(t);
+  var b=el("btn-qupi"), old=b.textContent; b.textContent="Copied ✅"; setTimeout(function(){ b.textContent=old; }, 1400);
+});
+el("btn-qback").addEventListener("click", function(e){ e.preventDefault(); buzz("tap"); show(WALL_FROM); });
 /* ---------- state ---------- */
 function stShape(){ return {i:0, correct:0, wrong:[], log:[], finished:false, best:null}; }
 function saveSt(){ sset("st_v1", ST); }
