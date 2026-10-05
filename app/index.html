@@ -100,6 +100,8 @@
   }
   .bigbtn.yt { background: linear-gradient(135deg,#ff5f52,#c4302b); color: #fff;
     border: 1px solid rgba(255,120,110,.5); box-shadow: 0 8px 20px rgba(229,57,53,.30); }
+  .bigbtn.upi { background: linear-gradient(135deg,#4b9bff,#1a56d6); color: #fff;
+    border: 1px solid rgba(160,200,255,.55); box-shadow: 0 8px 20px rgba(26,86,214,.32); }
   .row2 { display: flex; gap: 10px; } .row2 .bigbtn { flex: 1; }
 
   /* quiz top */
@@ -239,6 +241,7 @@
     <div class="card center muted" id="shelf-note">Pick a set and start practising — progress saves automatically 💾</div>
     <div id="shelf-list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
     <a class="bigbtn gold" id="btn-donate-shelf" href="https://drawdrawdraw2025.github.io/pay/">☕ Support Mmindpower ₹5</a>
+    <a class="bigbtn upi" id="btn-upi-shelf" href="upi://pay?pa=mmindpower.contact@oksbi&pn=BALU%20DASHRATH%20GARJE&cu=INR">💸 Pay via GPay / UPI — तुमची ॲप निवडा 📲</a>
     <a class="bigbtn yt" id="btn-youtube" href="https://youtube.com/@mmindpower">📺 Subscribe on YouTube — @mmindpower</a>
     <a class="bigbtn ghost" id="btn-channel" href="https://t.me/mmindpower_1">📣 Also on Telegram — @mmindpower_1</a>
   </div>
@@ -290,6 +293,7 @@
     <button class="bigbtn" id="btn-review">🔍 Review mistakes</button>
     <button class="bigbtn ghost" id="btn-replay">🔁 Replay this set</button>
     <a class="bigbtn gold" id="btn-donate-res" href="https://drawdrawdraw2025.github.io/pay/">☕ Support Mmindpower ₹5</a>
+    <a class="bigbtn upi" id="btn-upi-res" href="upi://pay?pa=mmindpower.contact@oksbi&pn=BALU%20DASHRATH%20GARJE&cu=INR">💸 Pay via GPay / UPI — तुमची ॲप निवडा 📲</a>
     <button class="bigbtn yt" id="btn-youtube2">📺 Subscribe on YouTube — @mmindpower</button>
     <button class="bigbtn ghost" id="btn-channel2">📣 Also on Telegram — @mmindpower_1</button>
     <button class="bigbtn ghost" id="btn-shelf">🗂️ All sets</button>
@@ -319,6 +323,7 @@ var TG = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : 
 var IN_TG = !!(TG && TG.initData);
 if (TG) { try { TG.ready(); TG.expand(); TG.setHeaderColor('#0a1224'); TG.setBackgroundColor('#070d1c'); } catch(e){} }
 var PAY_URL = "https://drawdrawdraw2025.github.io/pay/";
+var UPI_DIRECT = "upi://pay?pa=mmindpower.contact@oksbi&pn=BALU%20DASHRATH%20GARJE&cu=INR";
 var SETS = [ {id:"A", file:"data/set_a.json"}, {id:"B", file:"data/set_b.json"}, {id:"C", file:"data/set_c.json"}, {id:"D", file:"data/set_d.json"}, {id:"E", file:"data/set_e.json"}, {id:"F", file:"data/set_f.json"}, {id:"G", file:"data/set_g.json"}, {id:"H", file:"data/set_h.json"}, {id:"I", file:"data/set_i.json"}, {id:"J", file:"data/set_j.json"}, {id:"K", file:"data/set_k.json"}, {id:"L", file:"data/set_l.json"}, {id:"M", file:"data/set_m.json"}, {id:"N", file:"data/set_n.json"}, {id:"O", file:"data/set_o.json"}, {id:"P", file:"data/set_p.json"}, {id:"Q", file:"data/set_q.json"}, {id:"R", file:"data/set_r.json"}, {id:"S", file:"data/set_s.json"}, {id:"T", file:"data/set_t.json"}, {id:"U", file:"data/set_u.json"}, {id:"V", file:"data/set_v.json"}, {id:"W", file:"data/set_w.json"}, {id:"X", file:"data/set_x.json"}, {id:"Y", file:"data/set_y.json"}, {id:"Z", file:"data/set_z.json"} ];
 var DATA = {}, ST = {}, LANG = "both", CUR = null;
 
@@ -392,6 +397,11 @@ function setMainBtn(text, cb){
 function hideMainBtn(){
   if(IN_TG && TG.MainButton){ try{ TG.MainButton.hide(); if(mainCb){ TG.MainButton.offClick(mainCb); mainCb=null; } }catch(e){} } }
 ["btn-donate-shelf","btn-donate-res"].forEach(function(id){ el(id).addEventListener("click", function(e){ e.preventDefault(); openDonate(); }); });
+["btn-upi-shelf","btn-upi-res"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){
+  e.preventDefault(); buzz("sel");
+  try{ var a=document.createElement("a"); a.href=UPI_DIRECT; a.rel="noopener"; document.body.appendChild(a); a.click(); a.remove(); }
+  catch(err){ try{ window.location.href=UPI_DIRECT; }catch(e2){} }
+});});
 ["btn-youtube","btn-youtube2"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){ e.preventDefault(); nav("https://www.youtube.com/@mmindpower","yt"); }); });
 ["btn-channel","btn-channel2"].forEach(function(id){ var b=el(id); if(b) b.addEventListener("click", function(e){ e.preventDefault(); nav("https://t.me/mmindpower_1","telegram"); }); });
 if (TG && TG.BackButton){ try{ TG.BackButton.onClick(function(){ if(!el("view-review").classList.contains("hidden")){ backFromReview(); } else if(!el("view-journal").classList.contains("hidden")){ goShelf(); } else { goShelf(); } }); }catch(e){} }
