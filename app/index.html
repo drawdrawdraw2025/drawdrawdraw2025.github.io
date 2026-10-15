@@ -346,7 +346,16 @@ var IN_TG = !!(TG && TG.initData);
 if (TG) { try { TG.ready(); TG.expand(); TG.setHeaderColor('#0a1224'); TG.setBackgroundColor('#070d1c'); } catch(e){} }
 var PAY_URL = "https://drawdrawdraw2025.github.io/pay/";
 var UPI_DIRECT = "upi://pay?pa=mmindpower.contact@oksbi&pn=BALU%20DASHRATH%20GARJE&cu=INR";
-var SETS = [ {id:"A", file:"data/set_a.json"}, {id:"B", file:"data/set_b.json"}, {id:"C", file:"data/set_c.json"}, {id:"D", file:"data/set_d.json"}, {id:"E", file:"data/set_e.json"}, {id:"F", file:"data/set_f.json"}, {id:"G", file:"data/set_g.json"}, {id:"H", file:"data/set_h.json"}, {id:"I", file:"data/set_i.json"}, {id:"J", file:"data/set_j.json"}, {id:"K", file:"data/set_k.json"}, {id:"L", file:"data/set_l.json"}, {id:"M", file:"data/set_m.json"}, {id:"N", file:"data/set_n.json"}, {id:"O", file:"data/set_o.json"}, {id:"P", file:"data/set_p.json"}, {id:"Q", file:"data/set_q.json"}, {id:"R", file:"data/set_r.json"}, {id:"S", file:"data/set_s.json"}, {id:"T", file:"data/set_t.json"}, {id:"U", file:"data/set_u.json"}, {id:"V", file:"data/set_v.json"}, {id:"W", file:"data/set_w.json"}, {id:"X", file:"data/set_x.json"}, {id:"Y", file:"data/set_y.json"}, {id:"Z", file:"data/set_z.json"} ];
+var SETS_FALLBACK = [ {id:"A", file:"data/set_a.json"}, {id:"B", file:"data/set_b.json"}, {id:"C", file:"data/set_c.json"}, {id:"D", file:"data/set_d.json"}, {id:"E", file:"data/set_e.json"}, {id:"F", file:"data/set_f.json"}, {id:"G", file:"data/set_g.json"}, {id:"H", file:"data/set_h.json"}, {id:"I", file:"data/set_i.json"}, {id:"J", file:"data/set_j.json"}, {id:"K", file:"data/set_k.json"}, {id:"L", file:"data/set_l.json"}, {id:"M", file:"data/set_m.json"}, {id:"N", file:"data/set_n.json"}, {id:"O", file:"data/set_o.json"}, {id:"P", file:"data/set_p.json"}, {id:"Q", file:"data/set_q.json"}, {id:"R", file:"data/set_r.json"}, {id:"S", file:"data/set_s.json"}, {id:"T", file:"data/set_t.json"}, {id:"U", file:"data/set_u.json"}, {id:"V", file:"data/set_v.json"}, {id:"W", file:"data/set_w.json"}, {id:"X", file:"data/set_x.json"}, {id:"Y", file:"data/set_y.json"}, {id:"Z", file:"data/set_z.json"} ];
+var SETS = SETS_FALLBACK.slice();
+// Drop-in forever: data/sets.json (manifest) declares every available set.
+// Adding content later = upload set JSON + add its id to sets.json — ZERO page edits.
+fetch("data/sets.json").then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(j){
+  if (Array.isArray(j) && j.length) {
+    SETS = j.map(function(id){ return {id:id, file:"data/set_"+String(id).toLowerCase()+".json"}; });
+    renderShelf();
+  }
+}).catch(function(){ /* offline/first-run: fallback list rules */ });
 var DATA = {}, ST = {}, LANG = "both", CUR = null;
 
 /* ---------- storage ---------- */
